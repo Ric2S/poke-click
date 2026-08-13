@@ -1,0 +1,1991 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon Clicker & Pokédex - National Dex (1025)</title>
+    <style>
+        :root {
+            --bg-dark: #121214;
+            --panel-bg: #1e1e24;
+            --panel-border: #2e2e38;
+            --accent-red: #ee1515;
+            --accent-gold: #ffcb05;
+            --accent-blue: #2a75bb;
+            --text-main: #f0f0f5;
+            --text-muted: #a0a0b0;
+            --rarity-common: #a8a878;
+            --rarity-rare: #6890f0;
+            --rarity-legendary: #a040a0;
+            --rarity-shiny: #f8d030;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header HUD & Auth UI */
+        header {
+            background: linear-gradient(135deg, #222, #18181c);
+            border-bottom: 2px solid var(--accent-red);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(to bottom, #ee1515 50%, #ffffff 50%);
+            border-radius: 50%;
+            border: 3px solid #000;
+            position: relative;
+        }
+        .logo-icon::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            background: #fff;
+            border: 2px solid #000;
+            border-radius: 50%;
+        }
+
+        h1 {
+            font-size: 1.3rem;
+            letter-spacing: 1px;
+            color: var(--text-main);
+        }
+
+        .stats-summary {
+            display: flex;
+            gap: 15px;
+            background: rgba(0,0,0,0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--panel-border);
+            font-size: 0.9rem;
+            align-items: center;
+        }
+
+        .stat-item span {
+            color: var(--accent-gold);
+            font-weight: bold;
+        }
+
+        /* Pokecoin Badge */
+        .coin-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 203, 5, 0.15);
+            border: 1px solid var(--accent-gold);
+            padding: 4px 10px;
+            border-radius: 12px;
+            color: var(--accent-gold);
+            font-weight: bold;
+        }
+        .coin-icon {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* Firebase Auth Bar */
+        .auth-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--panel-border);
+        }
+
+        .auth-input {
+            background: #141418;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 5px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            outline: none;
+            width: 120px;
+        }
+
+        .auth-input:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .btn-auth {
+            background: var(--accent-blue);
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .btn-auth:hover {
+            background: #1d5a96;
+        }
+
+        .btn-auth-sec {
+            background: #333;
+            color: #fff;
+            border: 1px solid #555;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: background 0.2s;
+        }
+
+        .btn-auth-sec:hover {
+            background: #444;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            color: #88ff88;
+        }
+
+        .btn-reset {
+            background: #3a1515;
+            color: #ff8888;
+            border: 1px solid #662222;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+        .btn-reset:hover {
+            background: #551d1d;
+            color: #fff;
+        }
+
+        /* Profile Modal Trigger Button */
+        .btn-profile {
+            background: linear-gradient(135deg, #2a75bb, #1d5a96);
+            color: #fff;
+            border: 1px solid var(--accent-blue);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: transform 0.1s ease;
+        }
+        .btn-profile:hover {
+            transform: scale(1.03);
+        }
+
+        /* Main Game Layout */
+        main {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 20px;
+            padding: 20px;
+            flex: 1;
+            max-width: 1600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        @media (max-width: 900px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Left Side: Encounter Area & Inventory */
+        .game-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .card-title {
+            font-size: 1rem;
+            color: var(--accent-gold);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Encounter Box */
+        .encounter-box {
+            position: relative;
+            height: 280px;
+            background: radial-gradient(circle, #2a2a36 0%, #15151a 100%);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 2px solid #333;
+        }
+
+        .spawn-timer-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--accent-gold);
+            width: 100%;
+            transition: width 0.1s linear;
+        }
+
+        .pokemon-display {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .pokemon-display:hover {
+            transform: scale(1.05);
+        }
+
+        .pokemon-sprite {
+            width: 130px;
+            height: 130px;
+            object-fit: contain;
+            image-rendering: pixelated;
+            filter: drop-shadow(0 8px 12px rgba(0,0,0,0.6));
+        }
+
+        .shiny-sparkle {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 1.5rem;
+            animation: pulse 1s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.8); opacity: 0.7; }
+            100% { transform: scale(1.2); opacity: 1; }
+        }
+
+        .pokemon-name-tag {
+            background: rgba(0,0,0,0.7);
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-top: 6px;
+            border: 1px solid #444;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .badge-rarity {
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+        .badge-common { background: var(--rarity-common); color: #000; }
+        .badge-rare { background: var(--rarity-rare); color: #fff; }
+        .badge-legendary { background: var(--rarity-legendary); color: #fff; }
+        .badge-shiny { background: var(--rarity-shiny); color: #000; font-weight: bold; }
+
+        .catch-chance-badge {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: #88ff88;
+            background: rgba(0,40,0,0.5);
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid #226622;
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .charm-active-tag {
+            background: var(--accent-gold);
+            color: #000;
+            font-weight: bold;
+            font-size: 0.7rem;
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+
+        .empty-encounter {
+            color: var(--text-muted);
+            font-style: italic;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        /* Pokeball Animation Layer */
+        .catch-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.75);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        .catch-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .animated-ball {
+            width: 60px;
+            height: 60px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .shake {
+            animation: shakeBall 0.5s ease-in-out infinite;
+        }
+
+        @keyframes shakeBall {
+            0% { transform: rotate(0deg); }
+            20% { transform: rotate(-20deg); }
+            40% { transform: rotate(20deg); }
+            60% { transform: rotate(-10deg); }
+            80% { transform: rotate(10deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        .catch-result-text {
+            margin-top: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        /* Floating Coin Gains Animation */
+        .floating-coin {
+            position: absolute;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--accent-gold);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            text-shadow: 0 0 8px #000;
+            pointer-events: none;
+            z-index: 15;
+            animation: floatUp 1.4s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+        }
+
+        @keyframes floatUp {
+            0% { opacity: 0; transform: translateY(20px) scale(0.6); }
+            20% { opacity: 1; transform: translateY(0px) scale(1.2); }
+            80% { opacity: 1; transform: translateY(-40px) scale(1); }
+            100% { opacity: 0; transform: translateY(-60px) scale(0.8); }
+        }
+
+        /* Inventory & Shop Panels */
+        .inventory-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .ball-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #262630;
+            border: 2px solid transparent;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .ball-option:hover:not(.locked) {
+            background: #323240;
+            border-color: #555;
+        }
+
+        .ball-option.selected {
+            border-color: var(--accent-gold);
+            background: #2d2a1e;
+        }
+
+        .ball-option.locked {
+            opacity: 0.4;
+            cursor: not-allowed;
+            filter: grayscale(1);
+        }
+
+        .ball-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ball-icon {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
+        .ball-name {
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .ball-mult {
+            font-size: 0.75rem;
+            color: var(--accent-gold);
+        }
+
+        .ball-count {
+            font-weight: bold;
+            font-size: 0.95rem;
+            background: #181820;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        /* Shop Section */
+        .shop-box {
+            margin-top: 15px;
+            border-top: 1px solid var(--panel-border);
+            padding-top: 12px;
+        }
+
+        .shop-title {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: var(--accent-gold);
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .shop-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .shop-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #1a1a22;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #2a2a35;
+        }
+
+        .btn-buy {
+            background: var(--accent-gold);
+            color: #000;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: background 0.2s;
+        }
+
+        .btn-buy:hover {
+            background: #e5b700;
+        }
+
+        /* Pokédex Right Panel */
+        .pokedex-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .pokedex-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--panel-bg);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--panel-border);
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 180px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            background: #141418;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            outline: none;
+            font-size: 0.9rem;
+        }
+
+        .search-box input:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .sort-select {
+            background: #141418;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            outline: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .filter-checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            color: var(--accent-gold);
+            background: #141418;
+            padding: 7px 12px;
+            border-radius: 6px;
+            border: 1px solid #333;
+        }
+
+        .filter-checkbox-label input {
+            cursor: pointer;
+            accent-color: var(--accent-gold);
+        }
+
+        .pokedex-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
+            gap: 12px;
+            max-height: 720px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .pokedex-grid::-webkit-scrollbar { width: 8px; }
+        .pokedex-grid::-webkit-scrollbar-track { background: #141418; border-radius: 4px; }
+        .pokedex-grid::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        .pokedex-grid::-webkit-scrollbar-thumb:hover { background: #555; }
+
+        /* --- DEX CARD LAYOUT & FOIL EFFECTS --- */
+        .dex-card {
+            background: #181820;
+            border: 1px solid #2a2a35;
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            min-height: 125px;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+            overflow: hidden;
+        }
+
+        /* 1. Pokémon Capturado */
+        .dex-card.caught {
+            background: #20222e;
+            border-color: #3d425a;
+        }
+
+        .dex-card.caught:hover {
+            transform: translateY(-2deg);
+        }
+
+        /* 2. Pokémon Não Visto (Standard Dark Card) */
+        .dex-card.unseen {
+            background: #0f0f13;
+            border-color: #1a1a20;
+        }
+
+        .dex-card.unseen .dex-sprite {
+            filter: brightness(0);
+            opacity: 0.15;
+        }
+
+        .dex-card.unseen .dex-name {
+            color: #444455;
+        }
+
+        /* 3. Pokémon que Fugiu (Fled Card Layout - Dark Grayscale) */
+        .dex-card.fled {
+            background: #14141a;
+            border-color: #252530;
+        }
+
+        .dex-card.fled .dex-sprite {
+            filter: grayscale(100%) brightness(0.4) contrast(1.2);
+            opacity: 0.7;
+        }
+
+        .dex-card.fled .dex-name {
+            color: #888899;
+        }
+
+        /* --- EFEITOS FOIL PERMANENTES PARA CARTAS CAPTURADAS --- */
+        .dex-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 2;
+        }
+
+        /* Foil Permanente: Shiny Capturado */
+        .dex-card.caught.is-shiny::before {
+            opacity: 0.75;
+            background: linear-gradient(
+                115deg,
+                transparent 20%,
+                rgba(255, 215, 0, 0.35) 35%,
+                rgba(255, 105, 180, 0.35) 45%,
+                rgba(0, 255, 255, 0.35) 55%,
+                rgba(255, 215, 0, 0.35) 65%,
+                transparent 80%
+            );
+            background-size: 200% 200%;
+            animation: foilShimmer 3s linear infinite;
+        }
+
+        .dex-card.caught.is-shiny {
+            border-color: var(--accent-gold) !important;
+            box-shadow: 0 0 10px rgba(255, 203, 5, 0.3);
+        }
+
+        /* Foil Permanente: Lendário Capturado */
+        .dex-card.caught.is-legendary::before {
+            opacity: 0.75;
+            background: linear-gradient(
+                125deg,
+                transparent 20%,
+                rgba(138, 43, 226, 0.4) 35%,
+                rgba(75, 0, 130, 0.4) 45%,
+                rgba(0, 191, 255, 0.4) 55%,
+                rgba(147, 112, 219, 0.4) 65%,
+                transparent 80%
+            );
+            background-size: 200% 200%;
+            animation: foilShimmer 3.5s linear infinite;
+        }
+
+        .dex-card.caught.is-legendary {
+            border-color: #a040a0 !important;
+            box-shadow: 0 0 10px rgba(160, 64, 160, 0.4);
+        }
+
+        /* Foil Combinado: Shiny + Lendário Capturado */
+        .dex-card.caught.is-shiny.is-legendary::before {
+            opacity: 0.85;
+            background: linear-gradient(
+                135deg,
+                transparent 15%,
+                rgba(255, 215, 0, 0.5) 30%,
+                rgba(147, 112, 219, 0.5) 45%,
+                rgba(0, 255, 255, 0.5) 60%,
+                rgba(255, 215, 0, 0.5) 75%,
+                transparent 90%
+            );
+            background-size: 200% 200%;
+            animation: foilShimmer 2.2s linear infinite;
+        }
+
+        .dex-card.caught.is-shiny.is-legendary {
+            border-color: #ffd700 !important;
+            box-shadow: 0 0 14px rgba(255, 215, 0, 0.6);
+        }
+
+        /* Foil Preto e Branco / Grayscale para Lendários que FUGIRAM */
+        .dex-card.fled.is-legendary::before {
+            opacity: 0.35;
+            background: linear-gradient(
+                125deg,
+                transparent 20%,
+                rgba(255, 255, 255, 0.15) 35%,
+                rgba(120, 120, 120, 0.2) 45%,
+                rgba(200, 200, 200, 0.15) 55%,
+                transparent 80%
+            );
+            background-size: 200% 200%;
+            animation: foilShimmer 5s linear infinite;
+        }
+
+        @keyframes foilShimmer {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 200% 200%; }
+        }
+
+        .dex-num {
+            position: absolute;
+            top: 6px;
+            left: 8px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: bold;
+            z-index: 3;
+        }
+
+        .dex-count {
+            position: absolute;
+            top: 6px;
+            right: 8px;
+            font-size: 0.7rem;
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            padding: 1px 5px;
+            border-radius: 4px;
+            z-index: 3;
+        }
+
+        .dex-sprite {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            margin: 18px 0 6px 0;
+            image-rendering: pixelated;
+            z-index: 3;
+        }
+
+        .dex-name {
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+            z-index: 3;
+            color: var(--text-main);
+        }
+
+        .dex-shiny-indicator {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            font-size: 0.7rem;
+            z-index: 3;
+        }
+
+        .dex-charm-indicator {
+            position: absolute;
+            bottom: 4px;
+            left: 4px;
+            font-size: 0.65rem;
+            background: var(--accent-gold);
+            color: #000;
+            font-weight: bold;
+            padding: 1px 3px;
+            border-radius: 3px;
+            z-index: 3;
+        }
+
+        /* Trainer Profile Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .profile-card {
+            background: var(--panel-bg);
+            border: 2px solid var(--accent-blue);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 480px;
+            padding: 24px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.7);
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 12px; right: 16px;
+            font-size: 1.5rem;
+            color: #888;
+            cursor: pointer;
+        }
+        .close-modal:hover { color: #fff; }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--panel-border);
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+        }
+
+        .trainer-avatar {
+            width: 50px;
+            height: 50px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            border: 2px solid #fff;
+        }
+
+        .trainer-name-edit {
+            display: flex;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .trainer-name-input {
+            background: #121216;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            font-weight: bold;
+        }
+
+        .profile-stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .p-stat-box {
+            background: #141418;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #2a2a35;
+        }
+
+        .p-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .p-stat-val {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--accent-gold);
+        }
+
+        /* Toast Notifications */
+        #toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 3000;
+        }
+
+        .toast {
+            background: #222;
+            color: #fff;
+            border-left: 4px solid var(--accent-gold);
+            padding: 12px 18px;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            font-size: 0.85rem;
+            animation: slideIn 0.3s forwards, fadeOut 0.5s 2.5s forwards;
+        }
+
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <div class="logo-icon"></div>
+            <h1>PokéClick <span>National Dex</span></h1>
+        </div>
+        
+        <div class="stats-summary">
+            <div class="coin-badge">
+                <svg class="coin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="9" fill="#ffcb05" stroke="#b8860b"/>
+                    <path d="M12 7v10M9 9.5h5.5a2 2 0 0 1 0 4H9.5a2 2 0 0 0 0 4H15" stroke="#000" stroke-linecap="round"/>
+                </svg>
+                <span id="stat-coins">0</span>
+            </div>
+            <div class="stat-item">Capturados: <span id="stat-total-caught">0</span></div>
+            <div class="stat-item">Únicos: <span id="stat-unique-caught">0</span> / 1025</div>
+        </div>
+
+        <div class="header-actions">
+            <!-- Botão de Perfil -->
+            <button class="btn-profile" onclick="openProfileModal()">
+                👤 Perfil do Treinador
+            </button>
+
+            <!-- Firebase Auth Area -->
+            <div class="auth-container" id="auth-container">
+                <div id="auth-logged-out" style="display: flex; gap: 6px; align-items: center;">
+                    <input type="email" id="auth-email" class="auth-input" placeholder="E-mail">
+                    <input type="password" id="auth-password" class="auth-input" placeholder="Senha">
+                    <button class="btn-auth" onclick="loginEmail()">Entrar</button>
+                    <button class="btn-auth-sec" onclick="registerEmail()">Cadastrar</button>
+                </div>
+                <div id="auth-logged-in" class="user-info" style="display: none;">
+                    <span id="user-email-display">usuario@email.com</span>
+                    <button class="btn-auth-sec" onclick="logoutUser()">Sair</button>
+                </div>
+            </div>
+
+            <button class="btn-reset" onclick="resetGameSave()">Resetar Save</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- Left Panel: Spawn Area, Inventory & Shop -->
+        <div class="game-panel">
+            
+            <!-- Encounter Card -->
+            <div class="card">
+                <div class="card-title">
+                    <span>Área de Encontro</span>
+                    <span id="spawn-status" style="font-size: 0.75rem; color: #888;">Procurando...</span>
+                </div>
+
+                <div class="encounter-box" id="encounter-box">
+                    <div class="spawn-timer-bar" id="timer-bar"></div>
+                    
+                    <!-- Dynamic Pokemon Display -->
+                    <div id="active-pokemon-container" style="display: none;" onclick="attemptCatch()">
+                        <div class="pokemon-display">
+                            <span id="shiny-tag" class="shiny-sparkle" style="display:none;">✨</span>
+                            <img id="poke-sprite" class="pokemon-sprite" src="" alt="Pokemon">
+                            <div class="pokemon-name-tag">
+                                <span id="poke-name">Carregando...</span>
+                                <span id="poke-id" style="color: #aaa;">#0000</span>
+                                <span id="poke-rarity-badge" class="badge-rarity">Comum</span>
+                            </div>
+                            <div class="catch-chance-badge">
+                                Taxa de Captura: <span id="catch-chance-val">0%</span>
+                                <span id="charm-tag" class="charm-active-tag" style="display:none;">CHARM 4x</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="empty-encounter-msg" class="empty-encounter">
+                        Aguardando Pokémon aparecer...
+                    </div>
+
+                    <!-- Catching Animation Overlay -->
+                    <div class="catch-overlay" id="catch-overlay">
+                        <div class="animated-ball shake" id="overlay-ball-icon"></div>
+                        <div class="catch-result-text" id="catch-result-text">Lançando Pokébola...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inventory & Shop Card -->
+            <div class="card">
+                <div class="card-title">
+                    <span>Inventário & Loja</span>
+                </div>
+                
+                <div class="inventory-list" id="inventory-list">
+                    <!-- Populated dynamically via JS -->
+                </div>
+
+                <!-- PokéCoin Shop -->
+                <div class="shop-box">
+                    <div class="shop-title">
+                        <span>🛒 Loja PokéCoin</span>
+                    </div>
+                    <div class="shop-items">
+                        <div class="shop-item">
+                            <div class="ball-info">
+                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png" class="ball-icon" alt="Great Ball">
+                                <div>
+                                    <div class="ball-name">1x Great Ball</div>
+                                    <div class="ball-mult">1.5x Bônus</div>
+                                </div>
+                            </div>
+                            <button class="btn-buy" onclick="buyBall('greatball', 100)">
+                                100 🪙
+                            </button>
+                        </div>
+
+                        <div class="shop-item">
+                            <div class="ball-info">
+                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png" class="ball-icon" alt="Ultra Ball">
+                                <div>
+                                    <div class="ball-name">1x Ultra Ball</div>
+                                    <div class="ball-mult">2.0x Bônus</div>
+                                </div>
+                            </div>
+                            <button class="btn-buy" onclick="buyBall('ultraball', 200)">
+                                200 🪙
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Right Panel: Pokédex -->
+        <div class="pokedex-panel">
+            <div class="pokedex-controls">
+                <div class="search-box">
+                    <input type="text" id="dex-search" placeholder="Buscar por Nome ou Número..." oninput="renderPokedex()">
+                </div>
+                <label class="filter-checkbox-label">
+                    <input type="checkbox" id="filter-shiny-only" onchange="renderPokedex()">
+                    <span>Apenas Shinies ✨</span>
+                </label>
+                <select class="sort-select" id="dex-sort" onchange="renderPokedex()">
+                    <option value="id-asc">Número (#1 - #1025)</option>
+                    <option value="id-desc">Número (#1025 - #1)</option>
+                    <option value="last-caught">Últimos Capturados</option>
+                    <option value="most-caught">Mais Capturados</option>
+                </select>
+            </div>
+
+            <div class="pokedex-grid" id="pokedex-grid">
+                <!-- 1025 Slots rendered via JS -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal do Perfil do Treinador -->
+    <div class="modal-overlay" id="profile-modal">
+        <div class="profile-card">
+            <span class="close-modal" onclick="closeProfileModal()">&times;</span>
+            <div class="profile-header">
+                <div class="trainer-avatar">🧢</div>
+                <div>
+                    <div style="font-size: 0.8rem; color: #aaa;">Treinador Pokémon</div>
+                    <div class="trainer-name-edit">
+                        <input type="text" id="trainer-name-input" class="trainer-name-input" value="Red">
+                        <button class="btn-auth" onclick="saveTrainerName()">Salvar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div style="font-size: 0.9rem; font-weight: bold; color: var(--accent-gold);">📊 Estatísticas do Jogador</div>
+            
+            <div class="profile-stats-grid">
+                <div class="p-stat-box">
+                    <div class="p-stat-label">Total de Encontros</div>
+                    <div class="p-stat-val" id="p-stat-encounters">0</div>
+                </div>
+
+                <div class="p-stat-box">
+                    <div class="p-stat-label">Pokémon Capturados</div>
+                    <div class="p-stat-val" id="p-stat-caught">0</div>
+                </div>
+
+                <div class="p-stat-box">
+                    <div class="p-stat-label">Tentativas de Captura</div>
+                    <div class="p-stat-val" id="p-stat-throws">0</div>
+                </div>
+
+                <div class="p-stat-box">
+                    <div class="p-stat-label">Pokémon que Fugiram</div>
+                    <div class="p-stat-val" id="p-stat-fled">0</div>
+                </div>
+
+                <div class="p-stat-box" style="grid-column: span 2;">
+                    <div class="p-stat-label">Encontros com Shinies ✨</div>
+                    <div class="p-stat-val" id="p-stat-shinies-seen">0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <!-- Firebase SDKs (Modular v9 via CDN) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { 
+            getAuth, 
+            signInWithEmailAndPassword, 
+            createUserWithEmailAndPassword, 
+            signOut, 
+            onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { 
+            getFirestore, 
+            doc, 
+            getDoc, 
+            setDoc 
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAoy0v8uCM0EIEPVakdTSy8edyG01GxJf8",
+            authDomain: "pokeclick-9a5e7.firebaseapp.com",
+            projectId: "pokeclick-9a5e7",
+            storageBucket: "pokeclick-9a5e7.firebasestorage.app",
+            messagingSenderId: "871298281901",
+            appId: "1:871298281901:web:cab25f4fc52adbdf2df124"
+        };
+
+        let app, auth, db;
+        let currentUser = null;
+
+        try {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+        } catch (e) {
+            console.warn("Firebase não inicializado ou configuração inválida.", e);
+        }
+
+        window.firebaseLogin = async function(email, password) {
+            if (!auth) { showToast("Firebase não configurado."); return; }
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                showToast("Login realizado com sucesso!");
+            } catch (err) {
+                showToast("Erro ao entrar: " + err.message);
+            }
+        };
+
+        window.firebaseRegister = async function(email, password) {
+            if (!auth) { showToast("Firebase não configurado."); return; }
+            try {
+                await createUserWithEmailAndPassword(auth, email, password);
+                showToast("Conta criada e logada!");
+            } catch (err) {
+                showToast("Erro ao cadastrar: " + err.message);
+            }
+        };
+
+        window.firebaseLogout = async function() {
+            if (!auth) return;
+            try {
+                await signOut(auth);
+                showToast("Sessão encerrada.");
+            } catch (err) {
+                showToast("Erro ao sair: " + err.message);
+            }
+        };
+
+        window.saveToCloud = async function(gameData) {
+            if (!currentUser || !db) return;
+            try {
+                const userRef = doc(db, "users", currentUser.uid);
+                await setDoc(userRef, { gameData: gameData, updatedAt: new Date().toISOString() }, { merge: true });
+            } catch (err) {
+                console.error("Erro ao salvar no Cloud Firestore:", err);
+            }
+        };
+
+        window.loadFromCloud = async function() {
+            if (!currentUser || !db) return null;
+            try {
+                const userRef = doc(db, "users", currentUser.uid);
+                const docSnap = await getDoc(userRef);
+                if (docSnap.exists() && docSnap.data().gameData) {
+                    return docSnap.data().gameData;
+                }
+            } catch (err) {
+                console.error("Erro ao carregar do Cloud Firestore:", err);
+            }
+            return null;
+        };
+
+        if (auth) {
+            onAuthStateChanged(auth, async (user) => {
+                const loggedOutUI = document.getElementById('auth-logged-out');
+                const loggedInUI = document.getElementById('auth-logged-in');
+                const userEmailDisplay = document.getElementById('user-email-display');
+
+                if (user) {
+                    currentUser = user;
+                    userEmailDisplay.innerText = user.email;
+                    loggedOutUI.style.display = 'none';
+                    loggedInUI.style.display = 'flex';
+
+                    const cloudSave = await window.loadFromCloud();
+                    if (cloudSave) {
+                        window.applySaveData(cloudSave);
+                        showToast("Progresso da Nuvem carregado!");
+                    } else {
+                        window.syncSave();
+                    }
+                } else {
+                    currentUser = null;
+                    loggedOutUI.style.display = 'flex';
+                    loggedInUI.style.display = 'none';
+                }
+            });
+        }
+    </script>
+
+    <script>
+        /* --- GAME DATA & CONFIGURATION --- */
+        const TOTAL_POKEMON = 1025;
+        const SPRITE_BASE_URL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/";
+        const SHINY_SPRITE_BASE_URL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/";
+        const ITEM_SPRITE_BASE_URL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/";
+
+        const LEGENDARY_IDS = new Set([
+            144,145,146,150,151, 243,244,245,249,250,251, 377,378,379,380,381,382,383,384,385,386,
+            480,481,482,483,484,485,486,487,488,489,490,491,492,493, 638,639,640,641,642,643,644,645,646,647,648,649,
+            716,717,718,719,720,721, 785,786,787,788,789,790,791,792,793,794,795,796,797,798,799,800,801,802,803,804,805,806,807,808,809,
+            888,889,890,891,892,893,894,895,896,897,898, 905, 1001,1002,1003,1004,1007,1008,1014,1015,1016,1017,1024,1025
+        ]);
+
+        const RARE_IDS_EXTENDED = new Set([
+            3,6,9,12,18,26,31,34,36,38,45,59,65,68,76,85,94,103,130,131,134,135,136,142,143,149,
+            154,157,160,181,196,197,208,212,214,229,230,248, 254,257,260,282,289,306,330,350,373,376,
+            389,392,395,448,460,461,466,467,473,475,477,479, 497,500,503,530,534,553,571,609,612,635,
+            652,655,658,671,681,706,715, 724,727,730,745,778,784, 812,815,818,861,879,887, 908,911,914,930,954,998,1000
+        ]);
+
+        const BALLS = {
+            pokeball: {
+                id: 'pokeball',
+                name: 'Poké Ball',
+                mult: 1.0,
+                unlockCaptures: 0,
+                sprite: ITEM_SPRITE_BASE_URL + 'poke-ball.png'
+            },
+            greatball: {
+                id: 'greatball',
+                name: 'Great Ball',
+                mult: 1.5,
+                unlockCaptures: 0,
+                sprite: ITEM_SPRITE_BASE_URL + 'great-ball.png'
+            },
+            ultraball: {
+                id: 'ultraball',
+                name: 'Ultra Ball',
+                mult: 2.0,
+                unlockCaptures: 0,
+                sprite: ITEM_SPRITE_BASE_URL + 'ultra-ball.png'
+            },
+            masterball: {
+                id: 'masterball',
+                name: 'Master Ball',
+                mult: 100.0,
+                unlockCaptures: 0,
+                sprite: ITEM_SPRITE_BASE_URL + 'master-ball.png'
+            }
+        };
+
+        /* --- STATE MANAGEMENT --- */
+        let state = {
+            trainerName: "Treinador Red",
+            pokecoins: 0,
+            stats: {
+                totalEncounters: 0,
+                totalCaught: 0,
+                totalThrows: 0,
+                totalFled: 0,
+                shinyEncounters: 0
+            },
+            totalCaught: 0,
+            uniqueCaught: 0,
+            shiniesCaught: 0,
+            inventory: {
+                pokeball: Infinity,
+                greatball: 0,
+                ultraball: 0,
+                masterball: 0
+            },
+            activeBall: 'pokeball',
+            pokedex: {}, // id: { caught: int, shiny: bool, fled: bool, lastCaughtTime: timestamp }
+            history: []
+        };
+
+        const pokemonNameCache = {};
+        let currentEncounter = null;
+        let spawnTimeout = null;
+        let timerInterval = null;
+        let isCatching = false;
+
+        /* --- API CACHE --- */
+        async function fetchPokemonName(id) {
+            if (pokemonNameCache[id]) return pokemonNameCache[id];
+            try {
+                const response = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`);
+                if (!response.ok) throw new Error();
+                const data = await response.json();
+                let name = data.name;
+                const ptNameObj = data.names.find(n => n.language.name === "pt-BR" || n.language.name === "pt");
+                const enNameObj = data.names.find(n => n.language.name === "en");
+
+                if (ptNameObj) name = ptNameObj.name;
+                else if (enNameObj) name = enNameObj.name;
+
+                name = name.charAt(0).toUpperCase() + name.slice(1);
+                pokemonNameCache[id] = name;
+                return name;
+            } catch (err) {
+                const fallback = "Pokémon #" + id;
+                pokemonNameCache[id] = fallback;
+                return fallback;
+            }
+        }
+
+        function getPokemonNameSync(id) {
+            if (pokemonNameCache[id]) return pokemonNameCache[id];
+            fetchPokemonName(id).then(name => {
+                if (currentEncounter && currentEncounter.id === id) {
+                    const nameEl = document.getElementById('poke-name');
+                    if (nameEl) nameEl.innerText = name;
+                }
+                const dexNameEl = document.getElementById(`dex-name-${id}`);
+                if (dexNameEl && dexNameEl.innerText.startsWith('Pokémon #')) {
+                    dexNameEl.innerText = name;
+                }
+            });
+            return "Pokémon #" + id;
+        }
+
+        /* --- AUTH HELPER FUNCTIONS --- */
+        function loginEmail() {
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            if (!email || !password) { showToast("Preencha e-mail e senha."); return; }
+            if (window.firebaseLogin) window.firebaseLogin(email, password);
+        }
+
+        function registerEmail() {
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            if (!email || !password) { showToast("Preencha e-mail e senha."); return; }
+            if (window.firebaseRegister) window.firebaseRegister(email, password);
+        }
+
+        function logoutUser() {
+            if (window.firebaseLogout) window.firebaseLogout();
+        }
+
+        /* --- INIT & SAVE --- */
+        function initGame() {
+            loadSaveData();
+            setupInventory();
+            renderPokedex();
+            updateHUD();
+            scheduleNextSpawn(1000);
+        }
+
+        function loadSaveData() {
+            const saved = localStorage.getItem('poke_collector_save');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    applySaveData(parsed);
+                } catch (e) {
+                    console.error("Erro ao carregar save", e);
+                }
+            } else {
+                calculateStats();
+            }
+        }
+
+        function applySaveData(parsedData) {
+            state = { ...state, ...parsedData };
+            state.inventory.pokeball = Infinity;
+            if (!state.stats) {
+                state.stats = {
+                    totalEncounters: 0,
+                    totalCaught: state.totalCaught || 0,
+                    totalThrows: 0,
+                    totalFled: 0,
+                    shinyEncounters: state.shiniesCaught || 0
+                };
+            }
+            if (!state.pokecoins) state.pokecoins = 0;
+            if (!state.trainerName) state.trainerName = "Treinador Red";
+
+            document.getElementById('trainer-name-input').value = state.trainerName;
+
+            calculateStats();
+            updateHUD();
+            renderPokedex();
+        }
+
+        window.applySaveData = applySaveData;
+
+        function saveGameData() {
+            localStorage.setItem('poke_collector_save', JSON.stringify(state));
+            syncSave();
+        }
+
+        function syncSave() {
+            if (window.saveToCloud) {
+                window.saveToCloud(state);
+            }
+        }
+
+        window.syncSave = syncSave;
+
+        function resetGameSave() {
+            if (confirm("Tem certeza que deseja resetar TODO o seu progresso? Esta ação não pode ser desfeita.")) {
+                localStorage.removeItem('poke_collector_save');
+                location.reload();
+            }
+        }
+
+        function calculateStats() {
+            let unique = 0;
+            let total = 0;
+            let shinies = 0;
+
+            for (let id = 1; id <= TOTAL_POKEMON; id++) {
+                if (state.pokedex[id] && state.pokedex[id].caught > 0) {
+                    unique++;
+                    total += state.pokedex[id].caught;
+                    if (state.pokedex[id].shiny) shinies++;
+                }
+            }
+
+            state.uniqueCaught = unique;
+            state.totalCaught = total;
+            state.shiniesCaught = shinies;
+            if (state.stats) state.stats.totalCaught = total;
+        }
+
+        function updateHUD() {
+            document.getElementById('stat-coins').innerText = state.pokecoins;
+            document.getElementById('stat-total-caught').innerText = state.totalCaught;
+            document.getElementById('stat-unique-caught').innerText = state.uniqueCaught;
+            
+            renderInventory();
+            updateProfileModalStats();
+        }
+
+        /* --- SHOP & INVENTORY --- */
+        function setupInventory() {
+            renderInventory();
+        }
+
+        function renderInventory() {
+            const container = document.getElementById('inventory-list');
+            container.innerHTML = '';
+
+            Object.keys(BALLS).forEach(key => {
+                const ball = BALLS[key];
+                const qty = state.inventory[key];
+                const isSelected = state.activeBall === key;
+
+                const div = document.createElement('div');
+                div.className = `ball-option ${isSelected ? 'selected' : ''}`;
+                
+                let qtyDisplay = qty === Infinity ? '∞' : qty;
+
+                div.innerHTML = `
+                    <div class="ball-info">
+                        <img src="${ball.sprite}" class="ball-icon" alt="${ball.name}">
+                        <div>
+                            <div class="ball-name">${ball.name}</div>
+                            <div class="ball-mult">${ball.mult >= 100 ? '100% Captura' : `${ball.mult}x Bônus`}</div>
+                        </div>
+                    </div>
+                    <div class="ball-count">${qtyDisplay}</div>
+                `;
+
+                div.onclick = () => selectBall(key);
+                container.appendChild(div);
+            });
+        }
+
+        function selectBall(ballKey) {
+            if (state.inventory[ballKey] <= 0 && ballKey !== 'pokeball') {
+                showToast("Sem " + BALLS[ballKey].name + " disponíveis!");
+                return;
+            }
+            state.activeBall = ballKey;
+            renderInventory();
+            updateCatchChanceDisplay();
+        }
+
+        function buyBall(ballKey, cost) {
+            if (state.pokecoins < cost) {
+                showToast("PokéCoins insuficientes! Você precisa de " + cost + " moedas.");
+                return;
+            }
+
+            state.pokecoins -= cost;
+            state.inventory[ballKey] = (state.inventory[ballKey] || 0) + 1;
+            
+            showToast(`Comprado: 1x ${BALLS[ballKey].name}!`);
+            saveGameData();
+            updateHUD();
+        }
+
+        /* --- SPAWN & SHINY CHARM BONUS (50+ CATCHES) --- */
+        function scheduleNextSpawn(delayMs) {
+            clearTimeout(spawnTimeout);
+            clearInterval(timerInterval);
+
+            document.getElementById('spawn-status').innerText = "Procurando...";
+            document.getElementById('empty-encounter-msg').style.display = 'block';
+            document.getElementById('active-pokemon-container').style.display = 'none';
+            document.getElementById('timer-bar').style.width = '0%';
+            currentEncounter = null;
+
+            const nextTime = delayMs || (Math.floor(Math.random() * 4000) + 4000);
+            spawnTimeout = setTimeout(spawnPokemon, nextTime);
+        }
+
+        async function spawnPokemon() {
+            const roll = Math.random() * 100;
+            let rarity = 'common';
+            let baseChance = 55;
+            let chosenId = 1;
+
+            if (roll < 9.9) {
+                rarity = 'legendary';
+                baseChance = 10;
+                const legArray = Array.from(LEGENDARY_IDS);
+                chosenId = legArray[Math.floor(Math.random() * legArray.length)];
+            } else if (roll < 29.9) {
+                rarity = 'rare';
+                baseChance = 25;
+                const rareArray = Array.from(RARE_IDS_EXTENDED);
+                chosenId = rareArray[Math.floor(Math.random() * rareArray.length)];
+            } else {
+                rarity = 'common';
+                baseChance = 55;
+                do {
+                    chosenId = Math.floor(Math.random() * TOTAL_POKEMON) + 1;
+                } while (LEGENDARY_IDS.has(chosenId));
+            }
+
+            // Bônus Catch Charm de Espécie: >= 50 capturas da mesma espécie = 4x prob. Shiny
+            const speciesCaught = (state.pokedex[chosenId] && state.pokedex[chosenId].caught) ? state.pokedex[chosenId].caught : 0;
+            const hasShinyCharm = speciesCaught >= 50;
+            const shinyOdds = hasShinyCharm ? (0.001 * 4) : 0.001; // 1/250 vs 1/1000
+
+            const isShiny = Math.random() < shinyOdds;
+
+            state.stats.totalEncounters++;
+            if (isShiny) state.stats.shinyEncounters++;
+
+            currentEncounter = {
+                id: chosenId,
+                name: "Carregando...",
+                rarity: rarity,
+                baseChance: baseChance,
+                isShiny: isShiny,
+                hasShinyCharm: hasShinyCharm,
+                spawnTime: Date.now()
+            };
+
+            displayEncounter();
+
+            const fetchedName = await fetchPokemonName(chosenId);
+            if (currentEncounter && currentEncounter.id === chosenId) {
+                currentEncounter.name = fetchedName;
+                document.getElementById('poke-name').innerText = fetchedName;
+            }
+        }
+
+        function displayEncounter() {
+            if (!currentEncounter) return;
+
+            document.getElementById('spawn-status').innerText = "Pokémon Selvagem Apareceu!";
+            document.getElementById('empty-encounter-msg').style.display = 'none';
+            document.getElementById('active-pokemon-container').style.display = 'block';
+
+            const spriteUrl = currentEncounter.isShiny ? 
+                SHINY_SPRITE_BASE_URL + currentEncounter.id + ".png" : 
+                SPRITE_BASE_URL + currentEncounter.id + ".png";
+
+            document.getElementById('poke-sprite').src = spriteUrl;
+            document.getElementById('poke-name').innerText = currentEncounter.name;
+            document.getElementById('poke-id').innerText = "#" + String(currentEncounter.id).padStart(4, '0');
+
+            document.getElementById('shiny-tag').style.display = currentEncounter.isShiny ? 'block' : 'none';
+            document.getElementById('charm-tag').style.display = currentEncounter.hasShinyCharm ? 'inline-block' : 'none';
+
+            const badge = document.getElementById('poke-rarity-badge');
+            badge.className = 'badge-rarity';
+            if (currentEncounter.isShiny) {
+                badge.innerText = 'SHINY';
+                badge.classList.add('badge-shiny');
+            } else if (currentEncounter.rarity === 'legendary') {
+                badge.innerText = 'Lendário';
+                badge.classList.add('badge-legendary');
+            } else if (currentEncounter.rarity === 'rare') {
+                badge.innerText = 'Raro';
+                badge.classList.add('badge-rare');
+            } else {
+                badge.innerText = 'Comum';
+                badge.classList.add('badge-common');
+            }
+
+            updateCatchChanceDisplay();
+
+            const duration = 15000;
+            const startTime = Date.now();
+            
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                const elapsed = Date.now() - startTime;
+                const remainingPct = 100 - ((elapsed / duration) * 100);
+                
+                if (remainingPct <= 0) {
+                    clearInterval(timerInterval);
+                    handlePokemonFled();
+                } else {
+                    document.getElementById('timer-bar').style.width = remainingPct + '%';
+                }
+            }, 100);
+        }
+
+        function handlePokemonFled() {
+            if (!currentEncounter) return;
+            const pId = currentEncounter.id;
+            
+            state.stats.totalFled++;
+            
+            if (!state.pokedex[pId]) {
+                state.pokedex[pId] = { caught: 0, shiny: false, fled: true, lastCaughtTime: 0 };
+            } else {
+                state.pokedex[pId].fled = true;
+            }
+
+            showToast(currentEncounter.name + " fugiu!");
+            saveGameData();
+            updateHUD();
+            renderPokedex();
+            scheduleNextSpawn();
+        }
+
+        function updateCatchChanceDisplay() {
+            if (!currentEncounter) return;
+            const ballMult = BALLS[state.activeBall].mult;
+            let finalChance = Math.min(100, Math.round(currentEncounter.baseChance * ballMult));
+            if (state.activeBall === 'masterball') finalChance = 100;
+
+            document.getElementById('catch-chance-val').innerText = finalChance + '%';
+        }
+
+        /* --- CATCH & POKECOINS ANIMATION --- */
+        function attemptCatch() {
+            if (!currentEncounter || isCatching) return;
+
+            const activeBallKey = state.activeBall;
+            if (state.inventory[activeBallKey] <= 0 && activeBallKey !== 'pokeball') {
+                showToast("Sem Pokébolas do tipo " + BALLS[activeBallKey].name + "!");
+                return;
+            }
+
+            isCatching = true;
+            clearInterval(timerInterval);
+
+            state.stats.totalThrows++;
+
+            if (state.inventory[activeBallKey] !== Infinity) {
+                state.inventory[activeBallKey]--;
+                if (state.inventory[activeBallKey] <= 0) {
+                    state.activeBall = 'pokeball';
+                }
+            }
+
+            const overlay = document.getElementById('catch-overlay');
+            const ballIcon = document.getElementById('overlay-ball-icon');
+            const resultText = document.getElementById('catch-result-text');
+
+            ballIcon.style.backgroundImage = `url('${BALLS[activeBallKey].sprite}')`;
+            resultText.innerText = "Tentando Capturar...";
+            resultText.style.color = "#ffffff";
+            overlay.classList.add('active');
+
+            const ballMult = BALLS[activeBallKey].mult;
+            const chance = activeBallKey === 'masterball' ? 100 : Math.min(100, currentEncounter.baseChance * ballMult);
+            const roll = Math.random() * 100;
+            const success = roll <= chance;
+
+            setTimeout(() => {
+                if (success) {
+                    resultText.innerText = "Capturado com sucesso!";
+                    resultText.style.color = "#88ff88";
+
+                    const pId = currentEncounter.id;
+                    if (!state.pokedex[pId]) {
+                        state.pokedex[pId] = { caught: 0, shiny: false, fled: false, lastCaughtTime: 0 };
+                    }
+                    state.pokedex[pId].caught++;
+                    if (currentEncounter.isShiny) state.pokedex[pId].shiny = true;
+                    state.pokedex[pId].lastCaughtTime = Date.now();
+
+                    // Recompensa de PokéCoins (10 a 20 por captura)
+                    const coinsEarned = Math.floor(Math.random() * 11) + 10;
+                    state.pokecoins += coinsEarned;
+                    triggerCoinAnimation(coinsEarned);
+
+                    calculateStats();
+                    saveGameData();
+                    updateHUD();
+                    renderPokedex();
+
+                } else {
+                    resultText.innerText = currentEncounter.name + " fugiu!";
+                    resultText.style.color = "#ff8888";
+                    
+                    state.stats.totalFled++;
+                    const pId = currentEncounter.id;
+                    if (!state.pokedex[pId]) {
+                        state.pokedex[pId] = { caught: 0, shiny: false, fled: true, lastCaughtTime: 0 };
+                    } else {
+                        state.pokedex[pId].fled = true;
+                    }
+                    saveGameData();
+                    updateHUD();
+                    renderPokedex();
+                }
+
+                setTimeout(() => {
+                    overlay.classList.remove('active');
+                    isCatching = false;
+                    scheduleNextSpawn();
+                }, 1200);
+
+            }, 1500);
+        }
+
+        function triggerCoinAnimation(amount) {
+            const box = document.getElementById('encounter-box');
+            const floatElem = document.createElement('div');
+            floatElem.className = 'floating-coin';
+            floatElem.innerHTML = `+${amount} 🪙`;
+            box.appendChild(floatElem);
+
+            setTimeout(() => {
+                floatElem.remove();
+            }, 1400);
+        }
+
+        /* --- POKEDEX RENDER (CAUGHT, UNSEEN & FLED LAYOUTS) --- */
+        function renderPokedex() {
+            const grid = document.getElementById('pokedex-grid');
+            const searchVal = document.getElementById('dex-search').value.toLowerCase().trim();
+            const sortMode = document.getElementById('dex-sort').value;
+            const shinyOnly = document.getElementById('filter-shiny-only').checked;
+
+            let list = [];
+            for (let id = 1; id <= TOTAL_POKEMON; id++) {
+                const entry = state.pokedex[id] || { caught: 0, shiny: false, fled: false, lastCaughtTime: 0 };
+                const name = getPokemonNameSync(id);
+                list.push({
+                    id: id,
+                    name: name,
+                    caught: entry.caught,
+                    shiny: entry.shiny,
+                    fled: entry.fled && entry.caught === 0,
+                    lastCaughtTime: entry.lastCaughtTime,
+                    isLegendary: LEGENDARY_IDS.has(id)
+                });
+            }
+
+            if (shinyOnly) {
+                list = list.filter(item => item.caught > 0 && item.shiny);
+            }
+
+            if (searchVal) {
+                list = list.filter(item => 
+                    item.name.toLowerCase().includes(searchVal) || 
+                    String(item.id).includes(searchVal)
+                );
+            }
+
+            if (sortMode === 'id-asc') {
+                list.sort((a, b) => a.id - b.id);
+            } else if (sortMode === 'id-desc') {
+                list.sort((a, b) => b.id - a.id);
+            } else if (sortMode === 'last-caught') {
+                list.sort((a, b) => b.lastCaughtTime - a.lastCaughtTime);
+            } else if (sortMode === 'most-caught') {
+                list.sort((a, b) => b.caught - a.caught);
+            }
+
+            grid.innerHTML = '';
+            const fragment = document.createDocumentFragment();
+
+            list.forEach(item => {
+                const isCaught = item.caught > 0;
+                const isFled = item.fled;
+
+                const card = document.createElement('div');
+                
+                let cardClasses = 'dex-card';
+                if (isCaught) {
+                    cardClasses += ' caught';
+                    if (item.shiny) cardClasses += ' is-shiny';
+                    if (item.isLegendary) cardClasses += ' is-legendary';
+                } else if (isFled) {
+                    cardClasses += ' fled';
+                    if (item.isLegendary) cardClasses += ' is-legendary';
+                } else {
+                    cardClasses += ' unseen';
+                }
+
+                card.className = cardClasses;
+
+                const spriteUrl = isCaught && item.shiny ? 
+                    SHINY_SPRITE_BASE_URL + item.id + ".png" : 
+                    SPRITE_BASE_URL + item.id + ".png";
+
+                let displayName = '???';
+                if (isCaught || isFled) {
+                    displayName = item.name;
+                }
+
+                card.innerHTML = `
+                    <div class="dex-num">#${String(item.id).padStart(4, '0')}</div>
+                    ${isCaught ? `<div class="dex-count">x${item.caught}</div>` : ''}
+                    <img class="dex-sprite" src="${spriteUrl}" alt="${item.name}" loading="lazy">
+                    <div class="dex-name" id="dex-name-${item.id}">${displayName}</div>
+                    ${isCaught && item.shiny ? `<div class="dex-shiny-indicator">✨</div>` : ''}
+                    ${item.caught >= 50 ? `<div class="dex-charm-indicator">CHARM</div>` : ''}
+                `;
+
+                fragment.appendChild(card);
+            });
+
+            grid.appendChild(fragment);
+        }
+
+        /* --- TRAINER PROFILE MODAL --- */
+        function openProfileModal() {
+            updateProfileModalStats();
+            document.getElementById('profile-modal').classList.add('active');
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profile-modal').classList.remove('active');
+        }
+
+        function saveTrainerName() {
+            const newName = document.getElementById('trainer-name-input').value.trim();
+            if (newName) {
+                state.trainerName = newName;
+                saveGameData();
+                showToast("Nome de Treinador atualizado!");
+            }
+        }
+
+        function updateProfileModalStats() {
+            document.getElementById('p-stat-encounters').innerText = state.stats.totalEncounters;
+            document.getElementById('p-stat-caught').innerText = state.stats.totalCaught;
+            document.getElementById('p-stat-throws').innerText = state.stats.totalThrows;
+            document.getElementById('p-stat-fled').innerText = state.stats.totalFled;
+            document.getElementById('p-stat-shinies-seen').innerText = state.stats.shinyEncounters;
+        }
+
+        function showToast(msg) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerText = msg;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        window.onload = initGame;
+    </script>
+</body>
+</html>
