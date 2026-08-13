@@ -203,7 +203,6 @@
             color: #fff;
         }
 
-        /* Profile Modal Trigger Button */
         .btn-profile {
             background: linear-gradient(135deg, #2a75bb, #1d5a96);
             color: #fff;
@@ -240,7 +239,6 @@
             }
         }
 
-        /* Left Side: Encounter Area & Inventory */
         .game-panel {
             display: flex;
             flex-direction: column;
@@ -266,7 +264,6 @@
             align-items: center;
         }
 
-        /* Encounter Box */
         .encounter-box {
             position: relative;
             height: 280px;
@@ -377,7 +374,6 @@
             text-align: center;
         }
 
-        /* Pokeball Animation Layer */
         .catch-overlay {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -424,7 +420,6 @@
             font-weight: bold;
         }
 
-        /* Floating Coin Gains Animation */
         .floating-coin {
             position: absolute;
             font-size: 1.2rem;
@@ -446,7 +441,6 @@
             100% { opacity: 0; transform: translateY(-60px) scale(0.8); }
         }
 
-        /* Inventory & Shop Panels */
         .inventory-list {
             display: flex;
             flex-direction: column;
@@ -511,7 +505,6 @@
             border-radius: 6px;
         }
 
-        /* Shop Section */
         .shop-box {
             margin-top: 15px;
             border-top: 1px solid var(--panel-border);
@@ -562,7 +555,6 @@
             background: #e5b700;
         }
 
-        /* Pokédex Right Panel */
         .pokedex-panel {
             display: flex;
             flex-direction: column;
@@ -645,7 +637,6 @@
         .pokedex-grid::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
         .pokedex-grid::-webkit-scrollbar-thumb:hover { background: #555; }
 
-        /* --- DEX CARD LAYOUT & FOIL EFFECTS --- */
         .dex-card {
             background: #181820;
             border: 1px solid #2a2a35;
@@ -661,7 +652,6 @@
             overflow: hidden;
         }
 
-        /* 1. Pokémon Capturado */
         .dex-card.caught {
             background: #20222e;
             border-color: #3d425a;
@@ -671,7 +661,6 @@
             transform: translateY(-2deg);
         }
 
-        /* 2. Pokémon Não Visto (Standard Dark Card) */
         .dex-card.unseen {
             background: #0f0f13;
             border-color: #1a1a20;
@@ -686,7 +675,6 @@
             color: #444455;
         }
 
-        /* 3. Pokémon que Fugiu (Fled Card Layout - Dark Grayscale) */
         .dex-card.fled {
             background: #14141a;
             border-color: #252530;
@@ -701,7 +689,6 @@
             color: #888899;
         }
 
-        /* --- EFEITOS FOIL PERMANENTES PARA CARTAS CAPTURADAS --- */
         .dex-card::before {
             content: '';
             position: absolute;
@@ -715,7 +702,6 @@
             z-index: 2;
         }
 
-        /* Foil Permanente: Shiny Capturado */
         .dex-card.caught.is-shiny::before {
             opacity: 0.75;
             background: linear-gradient(
@@ -736,7 +722,6 @@
             box-shadow: 0 0 10px rgba(255, 203, 5, 0.3);
         }
 
-        /* Foil Permanente: Lendário Capturado */
         .dex-card.caught.is-legendary::before {
             opacity: 0.75;
             background: linear-gradient(
@@ -757,7 +742,6 @@
             box-shadow: 0 0 10px rgba(160, 64, 160, 0.4);
         }
 
-        /* Foil Combinado: Shiny + Lendário Capturado */
         .dex-card.caught.is-shiny.is-legendary::before {
             opacity: 0.85;
             background: linear-gradient(
@@ -778,7 +762,6 @@
             box-shadow: 0 0 14px rgba(255, 215, 0, 0.6);
         }
 
-        /* Foil Preto e Branco / Grayscale para Lendários que FUGIRAM */
         .dex-card.fled.is-legendary::before {
             opacity: 0.35;
             background: linear-gradient(
@@ -862,11 +845,10 @@
             z-index: 3;
         }
 
-        /* Trainer Profile Modal */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.85);
             z-index: 2000;
             display: flex;
             align-items: center;
@@ -964,7 +946,142 @@
             color: var(--accent-gold);
         }
 
-        /* Toast Notifications */
+        .booster-modal-content {
+            background: #181820;
+            border: 2px solid var(--accent-gold);
+            border-radius: 16px;
+            width: 95%;
+            max-width: 900px;
+            padding: 24px;
+            box-shadow: 0 0 30px rgba(255, 203, 5, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .booster-title {
+            font-size: 1.4rem;
+            color: var(--accent-gold);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+
+        .booster-cards-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            width: 100%;
+            flex-wrap: wrap;
+            perspective: 1000px;
+        }
+
+        .flip-card {
+            background-color: transparent;
+            width: 140px;
+            height: 200px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+        }
+
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 10px;
+            border: 2px solid #333;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            overflow: hidden;
+        }
+
+        .flip-card-front {
+            background: radial-gradient(circle, #ee1515 40%, #111 90%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-color: var(--accent-gold);
+        }
+
+        .flip-card-front::after {
+            content: '?';
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--accent-gold);
+            text-shadow: 0 0 10px #000;
+        }
+
+        .flip-card-back {
+            background: #20222e;
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+        }
+
+        .flip-card-back.common { border-color: var(--rarity-common); }
+        .flip-card-back.rare { border-color: var(--rarity-rare); box-shadow: 0 0 12px rgba(104, 144, 240, 0.5); }
+        .flip-card-back.legendary { border-color: var(--rarity-legendary); box-shadow: 0 0 16px rgba(160, 64, 160, 0.7); }
+        .flip-card-back.shiny { border-color: var(--accent-gold) !important; box-shadow: 0 0 20px rgba(255, 203, 5, 0.9) !important; }
+
+        .booster-card-num {
+            font-size: 0.65rem;
+            color: #aaa;
+            align-self: flex-start;
+        }
+
+        .booster-card-img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            image-rendering: pixelated;
+        }
+
+        .booster-card-name {
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
+
+        .booster-btn-close {
+            background: var(--accent-gold);
+            color: #000;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .booster-btn-close:hover {
+            transform: scale(1.05);
+        }
+
         #toast-container {
             position: fixed;
             bottom: 20px;
@@ -1011,12 +1128,10 @@
         </div>
 
         <div class="header-actions">
-            <!-- Botão de Perfil -->
             <button class="btn-profile" onclick="openProfileModal()">
                 👤 Perfil do Treinador
             </button>
 
-            <!-- Firebase Auth Area -->
             <div class="auth-container" id="auth-container">
                 <div id="auth-logged-out" style="display: flex; gap: 6px; align-items: center;">
                     <input type="email" id="auth-email" class="auth-input" placeholder="E-mail">
@@ -1035,10 +1150,8 @@
     </header>
 
     <main>
-        <!-- Left Panel: Spawn Area, Inventory & Shop -->
         <div class="game-panel">
             
-            <!-- Encounter Card -->
             <div class="card">
                 <div class="card-title">
                     <span>Área de Encontro</span>
@@ -1048,7 +1161,6 @@
                 <div class="encounter-box" id="encounter-box">
                     <div class="spawn-timer-bar" id="timer-bar"></div>
                     
-                    <!-- Dynamic Pokemon Display -->
                     <div id="active-pokemon-container" style="display: none;" onclick="attemptCatch()">
                         <div class="pokemon-display">
                             <span id="shiny-tag" class="shiny-sparkle" style="display:none;">✨</span>
@@ -1069,7 +1181,6 @@
                         Aguardando Pokémon aparecer...
                     </div>
 
-                    <!-- Catching Animation Overlay -->
                     <div class="catch-overlay" id="catch-overlay">
                         <div class="animated-ball shake" id="overlay-ball-icon"></div>
                         <div class="catch-result-text" id="catch-result-text">Lançando Pokébola...</div>
@@ -1077,45 +1188,30 @@
                 </div>
             </div>
 
-            <!-- Inventory & Shop Card -->
             <div class="card">
                 <div class="card-title">
                     <span>Inventário & Loja</span>
                 </div>
                 
                 <div class="inventory-list" id="inventory-list">
-                    <!-- Populated dynamically via JS -->
+                    <!-- Populates dynamically via JS -->
                 </div>
 
-                <!-- PokéCoin Shop -->
                 <div class="shop-box">
                     <div class="shop-title">
                         <span>🛒 Loja PokéCoin</span>
                     </div>
                     <div class="shop-items">
-                        <div class="shop-item">
+                        <div class="shop-item" style="border-color: var(--accent-gold);">
                             <div class="ball-info">
-                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png" class="ball-icon" alt="Great Ball">
+                                <span style="font-size: 1.5rem;">🎴</span>
                                 <div>
-                                    <div class="ball-name">1x Great Ball</div>
-                                    <div class="ball-mult">1.5x Bônus</div>
+                                    <div class="ball-name" style="color: var(--accent-gold);">Booster Pack</div>
+                                    <div class="ball-mult">5 Cartas Instantâneas!</div>
                                 </div>
                             </div>
-                            <button class="btn-buy" onclick="buyBall('greatball', 100)">
-                                100 🪙
-                            </button>
-                        </div>
-
-                        <div class="shop-item">
-                            <div class="ball-info">
-                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png" class="ball-icon" alt="Ultra Ball">
-                                <div>
-                                    <div class="ball-name">1x Ultra Ball</div>
-                                    <div class="ball-mult">2.0x Bônus</div>
-                                </div>
-                            </div>
-                            <button class="btn-buy" onclick="buyBall('ultraball', 200)">
-                                200 🪙
+                            <button class="btn-buy" style="background: linear-gradient(135deg, #ffcb05, #e5b700);" onclick="buyBoosterPack(1000)">
+                                1.000 🪙
                             </button>
                         </div>
                     </div>
@@ -1125,7 +1221,6 @@
 
         </div>
 
-        <!-- Right Panel: Pokédex -->
         <div class="pokedex-panel">
             <div class="pokedex-controls">
                 <div class="search-box">
@@ -1144,12 +1239,11 @@
             </div>
 
             <div class="pokedex-grid" id="pokedex-grid">
-                <!-- 1025 Slots rendered via JS -->
+                <!-- Rendered via JS -->
             </div>
         </div>
     </main>
 
-    <!-- Modal do Perfil do Treinador -->
     <div class="modal-overlay" id="profile-modal">
         <div class="profile-card">
             <span class="close-modal" onclick="closeProfileModal()">&times;</span>
@@ -1195,9 +1289,19 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="booster-modal">
+        <div class="booster-modal-content">
+            <div class="booster-title">✨ Abertura de Booster Pack ✨</div>
+            <div style="font-size: 0.85rem; color: #aaa;">Clique nas cartas para revelá-las!</div>
+            
+            <div class="booster-cards-container" id="booster-cards-container"></div>
+
+            <button class="booster-btn-close" id="btn-close-booster" style="display:none;" onclick="closeBoosterModal()">Coletar & Fechar</button>
+        </div>
+    </div>
+
     <div id="toast-container"></div>
 
-    <!-- Firebase SDKs (Modular v9 via CDN) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { 
@@ -1342,28 +1446,24 @@
                 id: 'pokeball',
                 name: 'Poké Ball',
                 mult: 1.0,
-                unlockCaptures: 0,
                 sprite: ITEM_SPRITE_BASE_URL + 'poke-ball.png'
             },
             greatball: {
                 id: 'greatball',
                 name: 'Great Ball',
                 mult: 1.5,
-                unlockCaptures: 0,
                 sprite: ITEM_SPRITE_BASE_URL + 'great-ball.png'
             },
             ultraball: {
                 id: 'ultraball',
                 name: 'Ultra Ball',
                 mult: 2.0,
-                unlockCaptures: 0,
                 sprite: ITEM_SPRITE_BASE_URL + 'ultra-ball.png'
             },
             masterball: {
                 id: 'masterball',
                 name: 'Master Ball',
                 mult: 100.0,
-                unlockCaptures: 0,
                 sprite: ITEM_SPRITE_BASE_URL + 'master-ball.png'
             }
         };
@@ -1389,7 +1489,7 @@
                 masterball: 0
             },
             activeBall: 'pokeball',
-            pokedex: {}, // id: { caught: int, shiny: bool, fled: bool, lastCaughtTime: timestamp }
+            pokedex: {},
             history: []
         };
 
@@ -1398,6 +1498,7 @@
         let spawnTimeout = null;
         let timerInterval = null;
         let isCatching = false;
+        let currentBoosterFlipped = 0;
 
         /* --- API CACHE --- */
         async function fetchPokemonName(id) {
@@ -1483,6 +1584,12 @@
         function applySaveData(parsedData) {
             state = { ...state, ...parsedData };
             state.inventory.pokeball = Infinity;
+            
+            // Garantir chaves no inventário
+            if (state.inventory.greatball === undefined) state.inventory.greatball = 0;
+            if (state.inventory.ultraball === undefined) state.inventory.ultraball = 0;
+            if (state.inventory.masterball === undefined) state.inventory.masterball = 0;
+
             if (!state.stats) {
                 state.stats = {
                     totalEncounters: 0,
@@ -1597,21 +1704,131 @@
             updateCatchChanceDisplay();
         }
 
-        function buyBall(ballKey, cost) {
+        /* --- BOOSTER PACK --- */
+        function buyBoosterPack(cost) {
             if (state.pokecoins < cost) {
-                showToast("PokéCoins insuficientes! Você precisa de " + cost + " moedas.");
+                showToast("PokéCoins insuficientes! Um Booster custa " + cost + " moedas.");
                 return;
             }
 
             state.pokecoins -= cost;
-            state.inventory[ballKey] = (state.inventory[ballKey] || 0) + 1;
-            
-            showToast(`Comprado: 1x ${BALLS[ballKey].name}!`);
             saveGameData();
             updateHUD();
+
+            openBoosterModal();
         }
 
-        /* --- SPAWN & SHINY CHARM BONUS (50+ CATCHES) --- */
+        function generateBoosterPokemon(slotIndex) {
+            let rarity = 'common';
+            const roll = Math.random() * 100;
+
+            if (slotIndex < 3) {
+                if (roll < 2) rarity = 'legendary';
+                else if (roll < 20) rarity = 'rare';
+                else rarity = 'common';
+            } else if (slotIndex === 3) {
+                if (roll < 15) rarity = 'legendary';
+                else rarity = 'rare';
+            } else {
+                if (roll < 10) rarity = 'legendary';
+                else if (roll < 30) rarity = 'rare';
+                else rarity = 'common';
+            }
+
+            let chosenId = 1;
+            if (rarity === 'legendary') {
+                const legArray = Array.from(LEGENDARY_IDS);
+                chosenId = legArray[Math.floor(Math.random() * legArray.length)];
+            } else if (rarity === 'rare') {
+                const rareArray = Array.from(RARE_IDS_EXTENDED);
+                chosenId = rareArray[Math.floor(Math.random() * rareArray.length)];
+            } else {
+                do {
+                    chosenId = Math.floor(Math.random() * TOTAL_POKEMON) + 1;
+                } while (LEGENDARY_IDS.has(chosenId));
+            }
+
+            const isShiny = Math.random() < 0.01;
+
+            return {
+                id: chosenId,
+                rarity: rarity,
+                isShiny: isShiny,
+                name: getPokemonNameSync(chosenId)
+            };
+        }
+
+        async function openBoosterModal() {
+            currentBoosterFlipped = 0;
+            const container = document.getElementById('booster-cards-container');
+            const btnClose = document.getElementById('btn-close-booster');
+            container.innerHTML = '';
+            btnClose.style.display = 'none';
+
+            document.getElementById('booster-modal').classList.add('active');
+
+            for (let i = 0; i < 5; i++) {
+                const poke = generateBoosterPokemon(i);
+                poke.name = await fetchPokemonName(poke.id);
+
+                const flipCard = document.createElement('div');
+                flipCard.className = 'flip-card';
+                
+                const spriteUrl = poke.isShiny ? 
+                    SHINY_SPRITE_BASE_URL + poke.id + ".png" : 
+                    SPRITE_BASE_URL + poke.id + ".png";
+
+                let rarityClass = poke.rarity;
+                if (poke.isShiny) rarityClass += ' shiny';
+
+                flipCard.innerHTML = `
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front"></div>
+                        <div class="flip-card-back ${rarityClass}">
+                            <div class="booster-card-num">#${String(poke.id).padStart(4, '0')}</div>
+                            <img class="booster-card-img" src="${spriteUrl}" alt="${poke.name}">
+                            <div class="booster-card-name">${poke.name}</div>
+                            <div style="font-size: 0.65rem; font-weight: bold; color: var(--accent-gold);">
+                                ${poke.isShiny ? '✨ SHINY ✨' : poke.rarity.toUpperCase()}
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                flipCard.onclick = () => revealBoosterCard(flipCard, poke);
+                container.appendChild(flipCard);
+            }
+        }
+
+        function revealBoosterCard(cardElem, poke) {
+            if (cardElem.classList.contains('flipped')) return;
+
+            cardElem.classList.add('flipped');
+            currentBoosterFlipped++;
+
+            const pId = poke.id;
+            if (!state.pokedex[pId]) {
+                state.pokedex[pId] = { caught: 0, shiny: false, fled: false, lastCaughtTime: 0 };
+            }
+            state.pokedex[pId].caught++;
+            if (poke.isShiny) state.pokedex[pId].shiny = true;
+            state.pokedex[pId].lastCaughtTime = Date.now();
+
+            if (currentBoosterFlipped >= 5) {
+                document.getElementById('btn-close-booster').style.display = 'block';
+            }
+        }
+
+        function closeBoosterModal() {
+            document.getElementById('booster-modal').classList.remove('active');
+            calculateStats();
+            saveGameData();
+            updateHUD();
+            renderPokedex();
+            showToast("5 Novos Pokémon adicionados à Pokédex!");
+        }
+
+        /* --- SPAWN & ENCOUNTER --- */
         function scheduleNextSpawn(delayMs) {
             clearTimeout(spawnTimeout);
             clearInterval(timerInterval);
@@ -1650,10 +1867,9 @@
                 } while (LEGENDARY_IDS.has(chosenId));
             }
 
-            // Bônus Catch Charm de Espécie: >= 50 capturas da mesma espécie = 4x prob. Shiny
             const speciesCaught = (state.pokedex[chosenId] && state.pokedex[chosenId].caught) ? state.pokedex[chosenId].caught : 0;
             const hasShinyCharm = speciesCaught >= 50;
-            const shinyOdds = hasShinyCharm ? (0.001 * 4) : 0.001; // 1/250 vs 1/1000
+            const shinyOdds = hasShinyCharm ? (0.001 * 4) : 0.001;
 
             const isShiny = Math.random() < shinyOdds;
 
@@ -1760,7 +1976,67 @@
             document.getElementById('catch-chance-val').innerText = finalChance + '%';
         }
 
-        /* --- CATCH & POKECOINS ANIMATION --- */
+        function calculateCoinReward(rarity, isShiny) {
+            let min = 15, max = 25;
+
+            if (rarity === 'rare') {
+                min = 75; max = 125;
+            } else if (rarity === 'legendary') {
+                min = 400; max = 600;
+            }
+
+            let baseReward = Math.floor(Math.random() * (max - min + 1)) + min;
+            
+            if (isShiny) {
+                baseReward *= 5;
+            }
+
+            return baseReward;
+        }
+
+        /* --- SISTEMA DE DROPS DE POKÉBOLAS APÓS CAPTURA --- */
+        function processBallDrops(rarity, isShiny) {
+            let dropsText = [];
+
+            // 1. Regras Principais de Drop por Raridade/Shiny
+            if (isShiny || rarity === 'legendary') {
+                // 100% de chance: 3 a 5 Ultra Balls
+                const qty = Math.floor(Math.random() * 3) + 3; // 3, 4 ou 5
+                state.inventory.ultraball = (state.inventory.ultraball || 0) + qty;
+                dropsText.push(`+${qty} Ultra Ball${qty > 1 ? 's' : ''}`);
+            } else if (rarity === 'rare') {
+                // 50% de chance: 2 a 5 Great Balls
+                if (Math.random() < 0.50) {
+                    const qtyGB = Math.floor(Math.random() * 4) + 2; // 2, 3, 4 ou 5
+                    state.inventory.greatball = (state.inventory.greatball || 0) + qtyGB;
+                    dropsText.push(`+${qtyGB} Great Ball${qtyGB > 1 ? 's' : ''}`);
+                }
+                // 10% de chance: 1 Ultra Ball
+                if (Math.random() < 0.10) {
+                    state.inventory.ultraball = (state.inventory.ultraball || 0) + 1;
+                    dropsText.push(`+1 Ultra Ball`);
+                }
+            } else { // Comum
+                // 20% de chance: 2 a 5 Great Balls
+                if (Math.random() < 0.20) {
+                    const qtyGB = Math.floor(Math.random() * 4) + 2; // 2, 3, 4 ou 5
+                    state.inventory.greatball = (state.inventory.greatball || 0) + qtyGB;
+                    dropsText.push(`+${qtyGB} Great Ball${qtyGB > 1 ? 's' : ''}`);
+                }
+            }
+
+            // 2. Drop Global de Master Ball: 0.1% (1/1000) independente do Pokémon
+            if (Math.random() < 0.001) {
+                state.inventory.masterball = (state.inventory.masterball || 0) + 1;
+                dropsText.push(`🟣 +1 MASTER BALL!`);
+            }
+
+            // Exibir notificação em Toast se ganhou algo
+            if (dropsText.length > 0) {
+                showToast("Recompensa de Captura: " + dropsText.join(' | '));
+            }
+        }
+
         function attemptCatch() {
             if (!currentEncounter || isCatching) return;
 
@@ -1809,10 +2085,13 @@
                     if (currentEncounter.isShiny) state.pokedex[pId].shiny = true;
                     state.pokedex[pId].lastCaughtTime = Date.now();
 
-                    // Recompensa de PokéCoins (10 a 20 por captura)
-                    const coinsEarned = Math.floor(Math.random() * 11) + 10;
+                    // Recompensa de PokéCoins
+                    const coinsEarned = calculateCoinReward(currentEncounter.rarity, currentEncounter.isShiny);
                     state.pokecoins += coinsEarned;
                     triggerCoinAnimation(coinsEarned);
+
+                    // Recompensa de Drops de Pokébolas
+                    processBallDrops(currentEncounter.rarity, currentEncounter.isShiny);
 
                     calculateStats();
                     saveGameData();
@@ -1856,7 +2135,7 @@
             }, 1400);
         }
 
-        /* --- POKEDEX RENDER (CAUGHT, UNSEEN & FLED LAYOUTS) --- */
+        /* --- POKEDEX RENDER --- */
         function renderPokedex() {
             const grid = document.getElementById('pokedex-grid');
             const searchVal = document.getElementById('dex-search').value.toLowerCase().trim();
