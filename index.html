@@ -36,7 +36,6 @@
             flex-direction: column;
         }
 
-        /* Header HUD & Auth UI */
         header {
             background: linear-gradient(135deg, #222, #18181c);
             border-bottom: 2px solid var(--accent-red);
@@ -98,7 +97,6 @@
             font-weight: bold;
         }
 
-        /* Pokecoin Badge */
         .coin-badge {
             display: flex;
             align-items: center;
@@ -123,7 +121,6 @@
             flex-wrap: wrap;
         }
 
-        /* Firebase Auth Bar Inside Modal */
         .auth-container {
             display: flex;
             flex-direction: column;
@@ -234,7 +231,6 @@
             transform: scale(1.03);
         }
 
-        /* Main Game Layout */
         main {
             display: grid;
             grid-template-columns: 350px 1fr;
@@ -966,7 +962,6 @@
             font-weight: bold;
         }
 
-        /* --- ABAS DO PERFIL --- */
         .profile-tabs {
             display: flex;
             gap: 8px;
@@ -1030,7 +1025,6 @@
             color: var(--accent-gold);
         }
 
-        /* ESTILOS SISTEMA DE AMIGOS */
         .my-id-container {
             background: #141418;
             border: 1px dashed var(--accent-gold);
@@ -1108,7 +1102,6 @@
             font-family: monospace;
         }
 
-        /* MODAL DETALHES DO AMIGO */
         .friend-profile-card {
             background: #181822;
             border: 2px solid var(--accent-gold);
@@ -1441,7 +1434,6 @@
         </div>
     </main>
 
-    <!-- MODAL PERFIL DO TREINADOR COM SISTEMA DE AMIGOS -->
     <div class="modal-overlay" id="profile-modal">
         <div class="profile-card">
             <span class="close-modal" onclick="closeProfileModal()">&times;</span>
@@ -1461,7 +1453,6 @@
                 <button class="tab-btn" onclick="switchProfileTab('friends')">👥 Amigos</button>
             </div>
 
-            <!-- TAB 1: ESTATÍSTICAS & CONTA -->
             <div id="tab-stats" class="tab-content active">
                 <div class="profile-stats-grid">
                     <div class="p-stat-box">
@@ -1507,7 +1498,6 @@
                 <button class="btn-reset" onclick="resetGameSave()">⚠️ Resetar Save</button>
             </div>
 
-            <!-- TAB 2: AMIGOS -->
             <div id="tab-friends" class="tab-content">
                 <div style="font-size: 0.8rem; font-weight: bold; color: var(--text-muted);">MEU ID DE TREINADOR</div>
                 <div class="my-id-container">
@@ -1522,15 +1512,12 @@
                 </div>
 
                 <div style="font-size: 0.8rem; font-weight: bold; color: var(--accent-gold); margin-top: 8px;">MEUS AMIGOS (<span id="friends-count">0</span>)</div>
-                <div class="friends-list" id="friends-list-container">
-                    <!-- Rendered via JS -->
-                </div>
+                <div class="friends-list" id="friends-list-container"></div>
             </div>
 
         </div>
     </div>
 
-    <!-- MODAL DETALHES DO AMIGO -->
     <div class="modal-overlay" id="friend-details-modal">
         <div class="friend-profile-card">
             <span class="close-modal" onclick="closeFriendModal()">&times;</span>
@@ -1573,7 +1560,7 @@
 
     <div class="modal-overlay" id="booster-modal">
         <div class="booster-modal-content">
-            <div class="booster-title">✨ Abertura de Booster Pack ✨</div>
+            <div class="booster-title" id="booster-modal-title">✨ Abertura de Booster Pack ✨</div>
             <div style="font-size: 0.85rem; color: #aaa;">Clique nas cartas para revelá-las!</div>
             
             <div class="booster-cards-container" id="booster-cards-container"></div>
@@ -1727,7 +1714,6 @@
     </script>
 
     <script>
-        /* --- GAME DATA & CONFIGURATION --- */
         const TOTAL_POKEMON = 1025;
         const SPRITE_BASE_URL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/";
         const SHINY_SPRITE_BASE_URL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/";
@@ -1774,7 +1760,6 @@
             }
         };
 
-        /* --- STATE MANAGEMENT --- */
         let state = {
             localTrainerID: generateLocalID(),
             trainerName: "Treinador Red",
@@ -1813,7 +1798,6 @@
             return "PK-" + Math.random().toString(36).substr(2, 9).toUpperCase();
         }
 
-        /* --- API CACHE --- */
         async function fetchPokemonName(id) {
             if (pokemonNameCache[id]) return pokemonNameCache[id];
             try {
@@ -1852,7 +1836,6 @@
             return "Pokémon #" + id;
         }
 
-        /* --- AUTH HELPER FUNCTIONS --- */
         function loginEmail() {
             const email = document.getElementById('auth-email').value;
             const password = document.getElementById('auth-password').value;
@@ -1871,7 +1854,6 @@
             if (window.firebaseLogout) window.firebaseLogout();
         }
 
-        /* --- INIT & SAVE --- */
         function initGame() {
             loadSaveData();
             setupInventory();
@@ -1975,7 +1957,6 @@
             updateProfileModalStats();
         }
 
-        /* --- SHOP & INVENTORY --- */
         function setupInventory() {
             renderInventory();
         }
@@ -2020,7 +2001,6 @@
             updateCatchChanceDisplay();
         }
 
-        /* --- BOOSTER PACK --- */
         function buyBoosterPack(cost) {
             if (state.pokecoins < cost) {
                 showToast("PokéCoins insuficientes! Um Booster custa " + cost + " moedas.");
@@ -2034,17 +2014,63 @@
             openBoosterModal();
         }
 
+        function generateGodPackPokemon() {
+            let rarity = 'legendary';
+            let isShiny = false;
+            
+            const roll = Math.random() * 100;
+
+            if (roll < 70) {
+                rarity = 'legendary';
+                isShiny = false;
+            } else if (roll < 95) {
+                isShiny = true;
+                const subRoll = Math.random() * 100;
+                if (subRoll < 15) rarity = 'legendary';
+                else if (subRoll < 45) rarity = 'rare';
+                else rarity = 'common';
+            } else {
+                rarity = 'legendary';
+                isShiny = true;
+            }
+
+            let chosenId = 1;
+            if (rarity === 'legendary') {
+                const legArray = Array.from(LEGENDARY_IDS);
+                chosenId = legArray[Math.floor(Math.random() * legArray.length)];
+            } else if (rarity === 'rare') {
+                const rareArray = Array.from(RARE_IDS_EXTENDED);
+                chosenId = rareArray[Math.floor(Math.random() * rareArray.length)];
+            } else {
+                do {
+                    chosenId = Math.floor(Math.random() * TOTAL_POKEMON) + 1;
+                } while (LEGENDARY_IDS.has(chosenId));
+            }
+
+            return {
+                id: chosenId,
+                rarity: rarity,
+                isShiny: isShiny,
+                name: getPokemonNameSync(chosenId)
+            };
+        }
+
         function generateBoosterPokemon(slotIndex) {
             let rarity = 'common';
             const roll = Math.random() * 100;
 
             if (slotIndex < 3) {
-                rarity = 'common';
+                if (roll < 85) rarity = 'common';
+                else if (roll < 95) rarity = 'rare';
+                else rarity = 'legendary';
             } else if (slotIndex === 3) {
-                rarity = 'rare';
+                if (roll < 40) rarity = 'common';
+                else if (roll < 90) rarity = 'rare';
+                else rarity = 'legendary';
             } else {
-                if (roll < 15) rarity = 'legendary';
-                else rarity = 'rare';
+                if (roll < 15) rarity = 'common';
+                else if (roll < 75) rarity = 'rare';
+                else rarity = 'legendary';
             }
 
             let chosenId = 1;
@@ -2074,13 +2100,19 @@
             currentBoosterFlipped = 0;
             const container = document.getElementById('booster-cards-container');
             const btnClose = document.getElementById('btn-close-booster');
+            const titleEl = document.getElementById('booster-modal-title');
+            
+            titleEl.innerText = "✨ Abertura de Booster Pack ✨";
+
             container.innerHTML = '';
             btnClose.style.display = 'none';
 
             document.getElementById('booster-modal').classList.add('active');
 
+            const isGodPack = Math.random() < (1 / 2000);
+
             for (let i = 0; i < 5; i++) {
-                const poke = generateBoosterPokemon(i);
+                const poke = isGodPack ? generateGodPackPokemon() : generateBoosterPokemon(i);
                 poke.name = await fetchPokemonName(poke.id);
 
                 const flipCard = document.createElement('div');
@@ -2126,7 +2158,6 @@
             if (poke.isShiny) state.pokedex[pId].shiny = true;
             state.pokedex[pId].lastCaughtTime = Date.now();
 
-            // Atualiza último Pokémon obtido
             state.lastObtained = {
                 id: poke.id,
                 name: poke.name,
@@ -2149,7 +2180,6 @@
             showToast("5 Novos Pokémon adicionados à Pokédex!");
         }
 
-        /* --- SPAWN & ENCOUNTER --- */
         function scheduleNextSpawn(delayMs) {
             clearTimeout(spawnTimeout);
             clearInterval(timerInterval);
@@ -2410,7 +2440,6 @@
                     if (currentEncounter.isShiny) state.pokedex[pId].shiny = true;
                     state.pokedex[pId].lastCaughtTime = Date.now();
 
-                    // Atualiza o último Pokémon capturado
                     state.lastObtained = {
                         id: currentEncounter.id,
                         name: currentEncounter.name,
@@ -2467,7 +2496,6 @@
             }, 1400);
         }
 
-        /* --- POKEDEX RENDER --- */
         function renderPokedex() {
             const grid = document.getElementById('pokedex-grid');
             const searchVal = document.getElementById('dex-search').value.toLowerCase().trim();
@@ -2557,7 +2585,6 @@
             grid.appendChild(fragment);
         }
 
-        /* --- TRAINER PROFILE MODAL & ABAS --- */
         function openProfileModal() {
             updateProfileModalStats();
             updateTrainerIDDisplay();
@@ -2612,7 +2639,6 @@
             document.getElementById('p-stat-shinies-seen').innerText = state.stats.shinyEncounters;
         }
 
-        /* --- SISTEMA DE AMIGOS --- */
         async function addFriendByID() {
             const input = document.getElementById('friend-id-input');
             const targetID = input.value.trim();
@@ -2635,7 +2661,6 @@
 
             let friendName = "Treinador " + targetID.substring(0, 5);
 
-            // Busca os dados reais do Firestore caso o Firebase esteja configurado
             if (window.fetchUserDataFromCloud) {
                 const cloudUser = await window.fetchUserDataFromCloud(targetID);
                 if (cloudUser) {
@@ -2692,7 +2717,6 @@
             document.getElementById('f-modal-name').innerText = friend.name;
             document.getElementById('f-modal-id').innerText = "ID: " + friend.id;
 
-            // Valores de carregamento/padrão
             document.getElementById('f-last-name').innerText = "Carregando...";
             document.getElementById('f-last-num').innerText = "#----";
             document.getElementById('f-last-time').innerText = "Buscando dados na nuvem...";
@@ -2702,7 +2726,6 @@
 
             document.getElementById('friend-details-modal').classList.add('active');
 
-            // Busca os dados atualizados no Firebase Firestore
             if (window.fetchUserDataFromCloud) {
                 const cloudData = await window.fetchUserDataFromCloud(friend.id);
                 if (cloudData) {
@@ -2729,7 +2752,6 @@
                 }
             }
 
-            // Fallback para quando o amigo não tiver dados na nuvem registrados
             document.getElementById('f-last-name').innerText = "Nenhum Pokémon registrado";
             document.getElementById('f-last-num').innerText = "#0000";
             document.getElementById('f-last-time').innerText = "Sem dados salvos";
@@ -2755,7 +2777,6 @@
             }, 3000);
         }
 
-        // Expor funções necessárias globalmente
         window.switchProfileTab = switchProfileTab;
         window.copyMyID = copyMyID;
         window.addFriendByID = addFriendByID;
