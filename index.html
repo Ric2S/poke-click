@@ -123,26 +123,35 @@
             flex-wrap: wrap;
         }
 
-        /* Firebase Auth Bar */
+        /* Firebase Auth Bar Inside Modal */
         .auth-container {
             display: flex;
-            align-items: center;
+            flex-direction: column;
             gap: 8px;
-            background: rgba(0, 0, 0, 0.4);
-            padding: 6px 12px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px;
             border-radius: 8px;
             border: 1px solid var(--panel-border);
+            margin-top: 15px;
+        }
+
+        .auth-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
         }
 
         .auth-input {
             background: #141418;
             border: 1px solid #333;
             color: #fff;
-            padding: 5px 8px;
+            padding: 6px 10px;
             border-radius: 4px;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             outline: none;
-            width: 120px;
+            flex: 1;
+            min-width: 130px;
         }
 
         .auth-input:focus {
@@ -153,10 +162,10 @@
             background: var(--accent-blue);
             color: #fff;
             border: none;
-            padding: 5px 10px;
+            padding: 6px 12px;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: bold;
             transition: background 0.2s;
         }
@@ -169,10 +178,10 @@
             background: #333;
             color: #fff;
             border: 1px solid #555;
-            padding: 5px 10px;
+            padding: 6px 12px;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             transition: background 0.2s;
         }
 
@@ -183,6 +192,7 @@
         .user-info {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             gap: 10px;
             font-size: 0.85rem;
             color: #88ff88;
@@ -192,11 +202,14 @@
             background: #3a1515;
             color: #ff8888;
             border: 1px solid #662222;
-            padding: 6px 12px;
+            padding: 8px 12px;
             border-radius: 6px;
             cursor: pointer;
             font-size: 0.8rem;
             transition: all 0.2s;
+            width: 100%;
+            margin-top: 15px;
+            text-align: center;
         }
         .btn-reset:hover {
             background: #551d1d;
@@ -207,7 +220,7 @@
             background: linear-gradient(135deg, #2a75bb, #1d5a96);
             color: #fff;
             border: 1px solid var(--accent-blue);
-            padding: 6px 12px;
+            padding: 6px 14px;
             border-radius: 6px;
             cursor: pointer;
             font-size: 0.85rem;
@@ -924,7 +937,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
-            margin-top: 15px;
+            margin-top: 12px;
         }
 
         .p-stat-box {
@@ -1131,21 +1144,6 @@
             <button class="btn-profile" onclick="openProfileModal()">
                 👤 Perfil do Treinador
             </button>
-
-            <div class="auth-container" id="auth-container">
-                <div id="auth-logged-out" style="display: flex; gap: 6px; align-items: center;">
-                    <input type="email" id="auth-email" class="auth-input" placeholder="E-mail">
-                    <input type="password" id="auth-password" class="auth-input" placeholder="Senha">
-                    <button class="btn-auth" onclick="loginEmail()">Entrar</button>
-                    <button class="btn-auth-sec" onclick="registerEmail()">Cadastrar</button>
-                </div>
-                <div id="auth-logged-in" class="user-info" style="display: none;">
-                    <span id="user-email-display">usuario@email.com</span>
-                    <button class="btn-auth-sec" onclick="logoutUser()">Sair</button>
-                </div>
-            </div>
-
-            <button class="btn-reset" onclick="resetGameSave()">Resetar Save</button>
         </div>
     </header>
 
@@ -1286,6 +1284,22 @@
                     <div class="p-stat-val" id="p-stat-shinies-seen">0</div>
                 </div>
             </div>
+
+            <div class="auth-container" id="auth-container">
+                <div style="font-size: 0.8rem; font-weight: bold; color: #aaa; margin-bottom: 4px;">☁️ Nuvem & Autenticação</div>
+                <div id="auth-logged-out" class="auth-row">
+                    <input type="email" id="auth-email" class="auth-input" placeholder="E-mail">
+                    <input type="password" id="auth-password" class="auth-input" placeholder="Senha">
+                    <button class="btn-auth" onclick="loginEmail()">Entrar</button>
+                    <button class="btn-auth-sec" onclick="registerEmail()">Cadastrar</button>
+                </div>
+                <div id="auth-logged-in" class="user-info" style="display: none;">
+                    <span id="user-email-display">usuario@email.com</span>
+                    <button class="btn-auth-sec" onclick="logoutUser()">Sair</button>
+                </div>
+            </div>
+
+            <button class="btn-reset" onclick="resetGameSave()">⚠️ Resetar Save</button>
         </div>
     </div>
 
@@ -1718,21 +1732,21 @@
             openBoosterModal();
         }
 
+        /* --- BALANCEAMENTO 1 & 2: REGRAS DO BOOSTER PACK TCG --- */
         function generateBoosterPokemon(slotIndex) {
             let rarity = 'common';
             const roll = Math.random() * 100;
 
             if (slotIndex < 3) {
-                if (roll < 2) rarity = 'legendary';
-                else if (roll < 20) rarity = 'rare';
-                else rarity = 'common';
+                // Cartas 1 a 3: 100% Comuns
+                rarity = 'common';
             } else if (slotIndex === 3) {
+                // Carta 4: 100% Rara
+                rarity = 'rare';
+            } else {
+                // Carta 5 (Slot Secreto): 85% Rara / 15% Lendário
                 if (roll < 15) rarity = 'legendary';
                 else rarity = 'rare';
-            } else {
-                if (roll < 10) rarity = 'legendary';
-                else if (roll < 30) rarity = 'rare';
-                else rarity = 'common';
             }
 
             let chosenId = 1;
@@ -1748,7 +1762,8 @@
                 } while (LEGENDARY_IDS.has(chosenId));
             }
 
-            const isShiny = Math.random() < 0.01;
+            // BALANCEAMENTO 2: Taxa de Shiny por carta no Booster ajustada para 0.2% (1 em 500)
+            const isShiny = Math.random() < 0.002;
 
             return {
                 id: chosenId,
@@ -1849,12 +1864,13 @@
             let baseChance = 55;
             let chosenId = 1;
 
-            if (roll < 9.9) {
+            // BALANCEAMENTO 1: Taxa de Spawn Natural de Lendários reduzida para 1.5%
+            if (roll < 1.5) {
                 rarity = 'legendary';
                 baseChance = 10;
                 const legArray = Array.from(LEGENDARY_IDS);
                 chosenId = legArray[Math.floor(Math.random() * legArray.length)];
-            } else if (roll < 29.9) {
+            } else if (roll < 25.0) {
                 rarity = 'rare';
                 baseChance = 25;
                 const rareArray = Array.from(RARE_IDS_EXTENDED);
@@ -1869,7 +1885,9 @@
 
             const speciesCaught = (state.pokedex[chosenId] && state.pokedex[chosenId].caught) ? state.pokedex[chosenId].caught : 0;
             const hasShinyCharm = speciesCaught >= 50;
-            const shinyOdds = hasShinyCharm ? (0.001 * 4) : 0.001;
+            
+            // BALANCEAMENTO 2: Taxa de Shiny selvagem base ajustada para 0.2% (1 em 500) e 0.8% com Charm (4x)
+            const shinyOdds = hasShinyCharm ? (0.002 * 4) : 0.002;
 
             const isShiny = Math.random() < shinyOdds;
 
