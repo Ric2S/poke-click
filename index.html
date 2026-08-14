@@ -300,6 +300,34 @@
             transition: width 0.1s linear;
         }
 
+        .caught-indicator {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            display: none;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 0, 0, 0.65);
+            border: 1px solid #444;
+            padding: 4px 8px;
+            border-radius: 20px;
+            z-index: 5;
+            backdrop-filter: blur(4px);
+        }
+
+        .caught-indicator img {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 4px rgba(255, 203, 5, 0.8));
+        }
+
+        .caught-indicator span {
+            font-size: 0.75rem;
+            color: #88ff88;
+            font-weight: bold;
+        }
+
         .pokemon-display {
             position: relative;
             display: flex;
@@ -881,10 +909,14 @@
             border: 2px solid var(--accent-blue);
             border-radius: 12px;
             width: 90%;
-            max-width: 480px;
+            max-width: 520px;
             padding: 24px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.7);
             position: relative;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
         .close-modal {
@@ -893,6 +925,7 @@
             font-size: 1.5rem;
             color: #888;
             cursor: pointer;
+            z-index: 10;
         }
         .close-modal:hover { color: #fff; }
 
@@ -902,7 +935,7 @@
             gap: 12px;
             border-bottom: 1px solid var(--panel-border);
             padding-bottom: 12px;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
 
         .trainer-avatar {
@@ -933,11 +966,49 @@
             font-weight: bold;
         }
 
+        /* --- ABAS DO PERFIL --- */
+        .profile-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 14px;
+            border-bottom: 1px solid var(--panel-border);
+            padding-bottom: 8px;
+        }
+
+        .tab-btn {
+            background: #141418;
+            border: 1px solid #333;
+            color: var(--text-muted);
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: var(--accent-blue);
+            color: #fff;
+            border-color: var(--accent-blue);
+        }
+
+        .tab-content {
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .tab-content.active {
+            display: flex;
+        }
+
         .profile-stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
-            margin-top: 12px;
         }
 
         .p-stat-box {
@@ -957,6 +1028,133 @@
             font-size: 1.1rem;
             font-weight: bold;
             color: var(--accent-gold);
+        }
+
+        /* ESTILOS SISTEMA DE AMIGOS */
+        .my-id-container {
+            background: #141418;
+            border: 1px dashed var(--accent-gold);
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .my-id-val {
+            font-family: monospace;
+            font-weight: bold;
+            color: var(--accent-gold);
+            font-size: 0.95rem;
+        }
+
+        .add-friend-box {
+            display: flex;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .friends-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .friend-item-card {
+            background: #141418;
+            border: 1px solid #2a2a35;
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .friend-item-card:hover {
+            background: #1f1f26;
+            border-color: var(--accent-blue);
+        }
+
+        .friend-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .friend-avatar {
+            width: 36px;
+            height: 36px;
+            background: #2a2a35;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .friend-details-name {
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: #fff;
+        }
+
+        .friend-details-id {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-family: monospace;
+        }
+
+        /* MODAL DETALHES DO AMIGO */
+        .friend-profile-card {
+            background: #181822;
+            border: 2px solid var(--accent-gold);
+            border-radius: 14px;
+            width: 90%;
+            max-width: 440px;
+            padding: 20px;
+            box-shadow: 0 0 25px rgba(255, 203, 5, 0.2);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .last-pokemon-box {
+            background: radial-gradient(circle, #252533 0%, #111116 100%);
+            border: 1px solid #3d3d4e;
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            position: relative;
+        }
+
+        .last-poke-sprite {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            image-rendering: pixelated;
+        }
+
+        .btn-trade {
+            background: linear-gradient(135deg, #ffcb05, #e5b700);
+            color: #000;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            font-size: 0.95rem;
+            transition: transform 0.1s;
+        }
+        .btn-trade:hover {
+            transform: scale(1.02);
         }
 
         .booster-modal-content {
@@ -1159,6 +1357,11 @@
                 <div class="encounter-box" id="encounter-box">
                     <div class="spawn-timer-bar" id="timer-bar"></div>
                     
+                    <div class="caught-indicator" id="caught-indicator">
+                        <img id="caught-ball-icon" src="" alt="Já Capturado">
+                        <span>Já Capturado!</span>
+                    </div>
+                    
                     <div id="active-pokemon-container" style="display: none;" onclick="attemptCatch()">
                         <div class="pokemon-display">
                             <span id="shiny-tag" class="shiny-sparkle" style="display:none;">✨</span>
@@ -1191,9 +1394,7 @@
                     <span>Inventário & Loja</span>
                 </div>
                 
-                <div class="inventory-list" id="inventory-list">
-                    <!-- Populates dynamically via JS -->
-                </div>
+                <div class="inventory-list" id="inventory-list"></div>
 
                 <div class="shop-box">
                     <div class="shop-title">
@@ -1236,12 +1437,11 @@
                 </select>
             </div>
 
-            <div class="pokedex-grid" id="pokedex-grid">
-                <!-- Rendered via JS -->
-            </div>
+            <div class="pokedex-grid" id="pokedex-grid"></div>
         </div>
     </main>
 
+    <!-- MODAL PERFIL DO TREINADOR COM SISTEMA DE AMIGOS -->
     <div class="modal-overlay" id="profile-modal">
         <div class="profile-card">
             <span class="close-modal" onclick="closeProfileModal()">&times;</span>
@@ -1256,50 +1456,118 @@
                 </div>
             </div>
 
-            <div style="font-size: 0.9rem; font-weight: bold; color: var(--accent-gold);">📊 Estatísticas do Jogador</div>
+            <div class="profile-tabs">
+                <button class="tab-btn active" onclick="switchProfileTab('stats')">📊 Estatísticas</button>
+                <button class="tab-btn" onclick="switchProfileTab('friends')">👥 Amigos</button>
+            </div>
+
+            <!-- TAB 1: ESTATÍSTICAS & CONTA -->
+            <div id="tab-stats" class="tab-content active">
+                <div class="profile-stats-grid">
+                    <div class="p-stat-box">
+                        <div class="p-stat-label">Total de Encontros</div>
+                        <div class="p-stat-val" id="p-stat-encounters">0</div>
+                    </div>
+
+                    <div class="p-stat-box">
+                        <div class="p-stat-label">Pokémon Capturados</div>
+                        <div class="p-stat-val" id="p-stat-caught">0</div>
+                    </div>
+
+                    <div class="p-stat-box">
+                        <div class="p-stat-label">Tentativas de Captura</div>
+                        <div class="p-stat-val" id="p-stat-throws">0</div>
+                    </div>
+
+                    <div class="p-stat-box">
+                        <div class="p-stat-label">Pokémon que Fugiram</div>
+                        <div class="p-stat-val" id="p-stat-fled">0</div>
+                    </div>
+
+                    <div class="p-stat-box" style="grid-column: span 2;">
+                        <div class="p-stat-label">Encontros com Shinies ✨</div>
+                        <div class="p-stat-val" id="p-stat-shinies-seen">0</div>
+                    </div>
+                </div>
+
+                <div class="auth-container" id="auth-container">
+                    <div style="font-size: 0.8rem; font-weight: bold; color: #aaa; margin-bottom: 4px;">☁️ Nuvem & Autenticação</div>
+                    <div id="auth-logged-out" class="auth-row">
+                        <input type="email" id="auth-email" class="auth-input" placeholder="E-mail">
+                        <input type="password" id="auth-password" class="auth-input" placeholder="Senha">
+                        <button class="btn-auth" onclick="loginEmail()">Entrar</button>
+                        <button class="btn-auth-sec" onclick="registerEmail()">Cadastrar</button>
+                    </div>
+                    <div id="auth-logged-in" class="user-info" style="display: none;">
+                        <span id="user-email-display">usuario@email.com</span>
+                        <button class="btn-auth-sec" onclick="logoutUser()">Sair</button>
+                    </div>
+                </div>
+
+                <button class="btn-reset" onclick="resetGameSave()">⚠️ Resetar Save</button>
+            </div>
+
+            <!-- TAB 2: AMIGOS -->
+            <div id="tab-friends" class="tab-content">
+                <div style="font-size: 0.8rem; font-weight: bold; color: var(--text-muted);">MEU ID DE TREINADOR</div>
+                <div class="my-id-container">
+                    <span class="my-id-val" id="my-trainer-id">CARREGANDO...</span>
+                    <button class="btn-auth-sec" style="padding: 4px 8px; font-size: 0.75rem;" onclick="copyMyID()">Copiar</button>
+                </div>
+
+                <div style="font-size: 0.8rem; font-weight: bold; color: var(--text-muted); margin-top: 6px;">ADICIONAR AMIGO</div>
+                <div class="add-friend-box">
+                    <input type="text" id="friend-id-input" class="auth-input" placeholder="Insira o ID do Treinador">
+                    <button class="btn-auth" onclick="addFriendByID()">Adicionar</button>
+                </div>
+
+                <div style="font-size: 0.8rem; font-weight: bold; color: var(--accent-gold); margin-top: 8px;">MEUS AMIGOS (<span id="friends-count">0</span>)</div>
+                <div class="friends-list" id="friends-list-container">
+                    <!-- Rendered via JS -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODAL DETALHES DO AMIGO -->
+    <div class="modal-overlay" id="friend-details-modal">
+        <div class="friend-profile-card">
+            <span class="close-modal" onclick="closeFriendModal()">&times;</span>
             
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div class="trainer-avatar" style="width: 42px; height: 42px; font-size: 1.3rem;">🎮</div>
+                <div>
+                    <div id="f-modal-name" style="font-size: 1.1rem; font-weight: bold; color: #fff;">Amigo</div>
+                    <div id="f-modal-id" style="font-size: 0.75rem; color: var(--text-muted); font-family: monospace;">ID: ---</div>
+                </div>
+            </div>
+
+            <div style="font-size: 0.8rem; font-weight: bold; color: var(--accent-gold);">🎁 ÚLTIMO POKÉMON OBTIDO</div>
+            <div class="last-pokemon-box" id="f-last-poke-box">
+                <img id="f-last-sprite" class="last-poke-sprite" src="" alt="Pokemon">
+                <div>
+                    <div id="f-last-name" style="font-size: 1rem; font-weight: bold; color: #fff;">Nenhum Pokémon</div>
+                    <div id="f-last-num" style="font-size: 0.8rem; color: #aaa;">#0000</div>
+                    <div id="f-last-time" style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;">--</div>
+                </div>
+            </div>
+
+            <div style="font-size: 0.8rem; font-weight: bold; color: var(--accent-gold);">📊 ESTATÍSTICAS</div>
             <div class="profile-stats-grid">
                 <div class="p-stat-box">
-                    <div class="p-stat-label">Total de Encontros</div>
-                    <div class="p-stat-val" id="p-stat-encounters">0</div>
+                    <div class="p-stat-label">Encontros</div>
+                    <div class="p-stat-val" id="f-stat-encounters">0</div>
                 </div>
-
                 <div class="p-stat-box">
-                    <div class="p-stat-label">Pokémon Capturados</div>
-                    <div class="p-stat-val" id="p-stat-caught">0</div>
-                </div>
-
-                <div class="p-stat-box">
-                    <div class="p-stat-label">Tentativas de Captura</div>
-                    <div class="p-stat-val" id="p-stat-throws">0</div>
-                </div>
-
-                <div class="p-stat-box">
-                    <div class="p-stat-label">Pokémon que Fugiram</div>
-                    <div class="p-stat-val" id="p-stat-fled">0</div>
-                </div>
-
-                <div class="p-stat-box" style="grid-column: span 2;">
-                    <div class="p-stat-label">Encontros com Shinies ✨</div>
-                    <div class="p-stat-val" id="p-stat-shinies-seen">0</div>
+                    <div class="p-stat-label">Capturados</div>
+                    <div class="p-stat-val" id="f-stat-caught">0</div>
                 </div>
             </div>
 
-            <div class="auth-container" id="auth-container">
-                <div style="font-size: 0.8rem; font-weight: bold; color: #aaa; margin-bottom: 4px;">☁️ Nuvem & Autenticação</div>
-                <div id="auth-logged-out" class="auth-row">
-                    <input type="email" id="auth-email" class="auth-input" placeholder="E-mail">
-                    <input type="password" id="auth-password" class="auth-input" placeholder="Senha">
-                    <button class="btn-auth" onclick="loginEmail()">Entrar</button>
-                    <button class="btn-auth-sec" onclick="registerEmail()">Cadastrar</button>
-                </div>
-                <div id="auth-logged-in" class="user-info" style="display: none;">
-                    <span id="user-email-display">usuario@email.com</span>
-                    <button class="btn-auth-sec" onclick="logoutUser()">Sair</button>
-                </div>
-            </div>
-
-            <button class="btn-reset" onclick="resetGameSave()">⚠️ Resetar Save</button>
+            <button class="btn-trade" onclick="initiateTradeWithFriend()">
+                🔄 Trocar Cartas (Em Breve)
+            </button>
         </div>
     </div>
 
@@ -1386,7 +1654,14 @@
             if (!currentUser || !db) return;
             try {
                 const userRef = doc(db, "users", currentUser.uid);
-                await setDoc(userRef, { gameData: gameData, updatedAt: new Date().toISOString() }, { merge: true });
+                await setDoc(userRef, { 
+                    trainerId: currentUser.uid,
+                    trainerName: gameData.trainerName || "Treinador Red",
+                    gameData: gameData, 
+                    lastObtained: gameData.lastObtained || null,
+                    stats: gameData.stats || null,
+                    updatedAt: new Date().toISOString() 
+                }, { merge: true });
             } catch (err) {
                 console.error("Erro ao salvar no Cloud Firestore:", err);
             }
@@ -1406,6 +1681,20 @@
             return null;
         };
 
+        window.fetchUserDataFromCloud = async function(targetUserId) {
+            if (!db) return null;
+            try {
+                const userRef = doc(db, "users", targetUserId);
+                const docSnap = await getDoc(userRef);
+                if (docSnap.exists()) {
+                    return docSnap.data();
+                }
+            } catch (err) {
+                console.error("Erro ao buscar amigo:", err);
+            }
+            return null;
+        };
+
         if (auth) {
             onAuthStateChanged(auth, async (user) => {
                 const loggedOutUI = document.getElementById('auth-logged-out');
@@ -1417,6 +1706,7 @@
                     userEmailDisplay.innerText = user.email;
                     loggedOutUI.style.display = 'none';
                     loggedInUI.style.display = 'flex';
+                    window.currentUID = user.uid;
 
                     const cloudSave = await window.loadFromCloud();
                     if (cloudSave) {
@@ -1429,7 +1719,9 @@
                     currentUser = null;
                     loggedOutUI.style.display = 'flex';
                     loggedInUI.style.display = 'none';
+                    window.currentUID = null;
                 }
+                window.updateTrainerIDDisplay();
             });
         }
     </script>
@@ -1484,6 +1776,7 @@
 
         /* --- STATE MANAGEMENT --- */
         let state = {
+            localTrainerID: generateLocalID(),
             trainerName: "Treinador Red",
             pokecoins: 0,
             stats: {
@@ -1504,7 +1797,8 @@
             },
             activeBall: 'pokeball',
             pokedex: {},
-            history: []
+            lastObtained: null,
+            friends: []
         };
 
         const pokemonNameCache = {};
@@ -1513,6 +1807,11 @@
         let timerInterval = null;
         let isCatching = false;
         let currentBoosterFlipped = 0;
+        let activeFriendData = null;
+
+        function generateLocalID() {
+            return "PK-" + Math.random().toString(36).substr(2, 9).toUpperCase();
+        }
 
         /* --- API CACHE --- */
         async function fetchPokemonName(id) {
@@ -1579,6 +1878,8 @@
             renderPokedex();
             updateHUD();
             scheduleNextSpawn(1000);
+            updateTrainerIDDisplay();
+            renderFriendsList();
         }
 
         function loadSaveData() {
@@ -1599,10 +1900,10 @@
             state = { ...state, ...parsedData };
             state.inventory.pokeball = Infinity;
             
-            // Garantir chaves no inventário
             if (state.inventory.greatball === undefined) state.inventory.greatball = 0;
             if (state.inventory.ultraball === undefined) state.inventory.ultraball = 0;
             if (state.inventory.masterball === undefined) state.inventory.masterball = 0;
+            if (!state.friends) state.friends = [];
 
             if (!state.stats) {
                 state.stats = {
@@ -1621,6 +1922,7 @@
             calculateStats();
             updateHUD();
             renderPokedex();
+            renderFriendsList();
         }
 
         window.applySaveData = applySaveData;
@@ -1732,19 +2034,15 @@
             openBoosterModal();
         }
 
-        /* --- BALANCEAMENTO 1 & 2: REGRAS DO BOOSTER PACK TCG --- */
         function generateBoosterPokemon(slotIndex) {
             let rarity = 'common';
             const roll = Math.random() * 100;
 
             if (slotIndex < 3) {
-                // Cartas 1 a 3: 100% Comuns
                 rarity = 'common';
             } else if (slotIndex === 3) {
-                // Carta 4: 100% Rara
                 rarity = 'rare';
             } else {
-                // Carta 5 (Slot Secreto): 85% Rara / 15% Lendário
                 if (roll < 15) rarity = 'legendary';
                 else rarity = 'rare';
             }
@@ -1762,7 +2060,6 @@
                 } while (LEGENDARY_IDS.has(chosenId));
             }
 
-            // BALANCEAMENTO 2: Taxa de Shiny por carta no Booster ajustada para 0.2% (1 em 500)
             const isShiny = Math.random() < 0.002;
 
             return {
@@ -1829,6 +2126,15 @@
             if (poke.isShiny) state.pokedex[pId].shiny = true;
             state.pokedex[pId].lastCaughtTime = Date.now();
 
+            // Atualiza último Pokémon obtido
+            state.lastObtained = {
+                id: poke.id,
+                name: poke.name,
+                isShiny: poke.isShiny,
+                timestamp: Date.now(),
+                source: 'booster'
+            };
+
             if (currentBoosterFlipped >= 5) {
                 document.getElementById('btn-close-booster').style.display = 'block';
             }
@@ -1851,6 +2157,7 @@
             document.getElementById('spawn-status').innerText = "Procurando...";
             document.getElementById('empty-encounter-msg').style.display = 'block';
             document.getElementById('active-pokemon-container').style.display = 'none';
+            document.getElementById('caught-indicator').style.display = 'none';
             document.getElementById('timer-bar').style.width = '0%';
             currentEncounter = null;
 
@@ -1864,7 +2171,6 @@
             let baseChance = 55;
             let chosenId = 1;
 
-            // BALANCEAMENTO 1: Taxa de Spawn Natural de Lendários reduzida para 1.5%
             if (roll < 1.5) {
                 rarity = 'legendary';
                 baseChance = 10;
@@ -1886,9 +2192,7 @@
             const speciesCaught = (state.pokedex[chosenId] && state.pokedex[chosenId].caught) ? state.pokedex[chosenId].caught : 0;
             const hasShinyCharm = speciesCaught >= 50;
             
-            // BALANCEAMENTO 2: Taxa de Shiny selvagem base ajustada para 0.2% (1 em 500) e 0.8% com Charm (4x)
             const shinyOdds = hasShinyCharm ? (0.002 * 4) : 0.002;
-
             const isShiny = Math.random() < shinyOdds;
 
             state.stats.totalEncounters++;
@@ -1919,6 +2223,17 @@
             document.getElementById('spawn-status').innerText = "Pokémon Selvagem Apareceu!";
             document.getElementById('empty-encounter-msg').style.display = 'none';
             document.getElementById('active-pokemon-container').style.display = 'block';
+
+            const alreadyCaught = state.pokedex[currentEncounter.id] && state.pokedex[currentEncounter.id].caught > 0;
+            const caughtIndicator = document.getElementById('caught-indicator');
+            const caughtBallIcon = document.getElementById('caught-ball-icon');
+
+            if (alreadyCaught) {
+                caughtBallIcon.src = BALLS.pokeball.sprite;
+                caughtIndicator.style.display = 'flex';
+            } else {
+                caughtIndicator.style.display = 'none';
+            }
 
             const spriteUrl = currentEncounter.isShiny ? 
                 SHINY_SPRITE_BASE_URL + currentEncounter.id + ".png" : 
@@ -2012,44 +2327,36 @@
             return baseReward;
         }
 
-        /* --- SISTEMA DE DROPS DE POKÉBOLAS APÓS CAPTURA --- */
         function processBallDrops(rarity, isShiny) {
             let dropsText = [];
 
-            // 1. Regras Principais de Drop por Raridade/Shiny
             if (isShiny || rarity === 'legendary') {
-                // 100% de chance: 3 a 5 Ultra Balls
-                const qty = Math.floor(Math.random() * 3) + 3; // 3, 4 ou 5
+                const qty = Math.floor(Math.random() * 3) + 3;
                 state.inventory.ultraball = (state.inventory.ultraball || 0) + qty;
                 dropsText.push(`+${qty} Ultra Ball${qty > 1 ? 's' : ''}`);
             } else if (rarity === 'rare') {
-                // 50% de chance: 2 a 5 Great Balls
                 if (Math.random() < 0.50) {
-                    const qtyGB = Math.floor(Math.random() * 4) + 2; // 2, 3, 4 ou 5
+                    const qtyGB = Math.floor(Math.random() * 4) + 2;
                     state.inventory.greatball = (state.inventory.greatball || 0) + qtyGB;
                     dropsText.push(`+${qtyGB} Great Ball${qtyGB > 1 ? 's' : ''}`);
                 }
-                // 10% de chance: 1 Ultra Ball
                 if (Math.random() < 0.10) {
                     state.inventory.ultraball = (state.inventory.ultraball || 0) + 1;
                     dropsText.push(`+1 Ultra Ball`);
                 }
-            } else { // Comum
-                // 20% de chance: 2 a 5 Great Balls
+            } else {
                 if (Math.random() < 0.20) {
-                    const qtyGB = Math.floor(Math.random() * 4) + 2; // 2, 3, 4 ou 5
+                    const qtyGB = Math.floor(Math.random() * 4) + 2;
                     state.inventory.greatball = (state.inventory.greatball || 0) + qtyGB;
                     dropsText.push(`+${qtyGB} Great Ball${qtyGB > 1 ? 's' : ''}`);
                 }
             }
 
-            // 2. Drop Global de Master Ball: 0.1% (1/1000) independente do Pokémon
             if (Math.random() < 0.001) {
                 state.inventory.masterball = (state.inventory.masterball || 0) + 1;
                 dropsText.push(`🟣 +1 MASTER BALL!`);
             }
 
-            // Exibir notificação em Toast se ganhou algo
             if (dropsText.length > 0) {
                 showToast("Recompensa de Captura: " + dropsText.join(' | '));
             }
@@ -2103,12 +2410,19 @@
                     if (currentEncounter.isShiny) state.pokedex[pId].shiny = true;
                     state.pokedex[pId].lastCaughtTime = Date.now();
 
-                    // Recompensa de PokéCoins
+                    // Atualiza o último Pokémon capturado
+                    state.lastObtained = {
+                        id: currentEncounter.id,
+                        name: currentEncounter.name,
+                        isShiny: currentEncounter.isShiny,
+                        timestamp: Date.now(),
+                        source: 'catch'
+                    };
+
                     const coinsEarned = calculateCoinReward(currentEncounter.rarity, currentEncounter.isShiny);
                     state.pokecoins += coinsEarned;
                     triggerCoinAnimation(coinsEarned);
 
-                    // Recompensa de Drops de Pokébolas
                     processBallDrops(currentEncounter.rarity, currentEncounter.isShiny);
 
                     calculateStats();
@@ -2243,14 +2557,42 @@
             grid.appendChild(fragment);
         }
 
-        /* --- TRAINER PROFILE MODAL --- */
+        /* --- TRAINER PROFILE MODAL & ABAS --- */
         function openProfileModal() {
             updateProfileModalStats();
+            updateTrainerIDDisplay();
+            renderFriendsList();
             document.getElementById('profile-modal').classList.add('active');
         }
 
         function closeProfileModal() {
             document.getElementById('profile-modal').classList.remove('active');
+        }
+
+        function switchProfileTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+
+            if (tabName === 'stats') {
+                document.querySelectorAll('.tab-btn')[0].classList.add('active');
+                document.getElementById('tab-stats').classList.add('active');
+            } else if (tabName === 'friends') {
+                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+                document.getElementById('tab-friends').classList.add('active');
+            }
+        }
+
+        function updateTrainerIDDisplay() {
+            const idElem = document.getElementById('my-trainer-id');
+            if (idElem) {
+                idElem.innerText = window.currentUID || state.localTrainerID;
+            }
+        }
+
+        function copyMyID() {
+            const idText = window.currentUID || state.localTrainerID;
+            navigator.clipboard.writeText(idText);
+            showToast("ID do Treinador copiado!");
         }
 
         function saveTrainerName() {
@@ -2270,6 +2612,137 @@
             document.getElementById('p-stat-shinies-seen').innerText = state.stats.shinyEncounters;
         }
 
+        /* --- SISTEMA DE AMIGOS --- */
+        async function addFriendByID() {
+            const input = document.getElementById('friend-id-input');
+            const targetID = input.value.trim();
+
+            if (!targetID) {
+                showToast("Digite o ID de um amigo!");
+                return;
+            }
+
+            const myID = window.currentUID || state.localTrainerID;
+            if (targetID === myID) {
+                showToast("Você não pode adicionar seu próprio ID!");
+                return;
+            }
+
+            if (state.friends.some(f => f.id === targetID)) {
+                showToast("Este amigo já está na sua lista!");
+                return;
+            }
+
+            let friendName = "Treinador " + targetID.substring(0, 5);
+
+            // Busca os dados reais do Firestore caso o Firebase esteja configurado
+            if (window.fetchUserDataFromCloud) {
+                const cloudUser = await window.fetchUserDataFromCloud(targetID);
+                if (cloudUser) {
+                    if (cloudUser.trainerName) friendName = cloudUser.trainerName;
+                }
+            }
+
+            state.friends.push({
+                id: targetID,
+                name: friendName,
+                addedAt: Date.now()
+            });
+
+            saveGameData();
+            renderFriendsList();
+            input.value = '';
+            showToast("Amigo adicionado com sucesso!");
+        }
+
+        function renderFriendsList() {
+            const container = document.getElementById('friends-list-container');
+            const countElem = document.getElementById('friends-count');
+            if (!container) return;
+
+            container.innerHTML = '';
+            countElem.innerText = state.friends.length;
+
+            if (state.friends.length === 0) {
+                container.innerHTML = `<div style="font-size: 0.8rem; color: #666; text-align: center; padding: 10px;">Nenhum amigo adicionado ainda.</div>`;
+                return;
+            }
+
+            state.friends.forEach(friend => {
+                const card = document.createElement('div');
+                card.className = 'friend-item-card';
+                card.innerHTML = `
+                    <div class="friend-info">
+                        <div class="friend-avatar">🧢</div>
+                        <div>
+                            <div class="friend-details-name">${friend.name}</div>
+                            <div class="friend-details-id">ID: ${friend.id}</div>
+                        </div>
+                    </div>
+                    <div style="font-size: 0.8rem; color: var(--accent-gold);">➜</div>
+                `;
+                card.onclick = () => openFriendDetails(friend);
+                container.appendChild(card);
+            });
+        }
+
+        async function openFriendDetails(friend) {
+            activeFriendData = friend;
+            
+            document.getElementById('f-modal-name').innerText = friend.name;
+            document.getElementById('f-modal-id').innerText = "ID: " + friend.id;
+
+            // Valores de carregamento/padrão
+            document.getElementById('f-last-name').innerText = "Carregando...";
+            document.getElementById('f-last-num').innerText = "#----";
+            document.getElementById('f-last-time').innerText = "Buscando dados na nuvem...";
+            document.getElementById('f-last-sprite').src = SPRITE_BASE_URL + "0.png";
+            document.getElementById('f-stat-encounters').innerText = "0";
+            document.getElementById('f-stat-caught').innerText = "0";
+
+            document.getElementById('friend-details-modal').classList.add('active');
+
+            // Busca os dados atualizados no Firebase Firestore
+            if (window.fetchUserDataFromCloud) {
+                const cloudData = await window.fetchUserDataFromCloud(friend.id);
+                if (cloudData) {
+                    if (cloudData.trainerName) document.getElementById('f-modal-name').innerText = cloudData.trainerName;
+                    
+                    if (cloudData.stats) {
+                        document.getElementById('f-stat-encounters').innerText = cloudData.stats.totalEncounters || 0;
+                        document.getElementById('f-stat-caught').innerText = cloudData.stats.totalCaught || 0;
+                    }
+
+                    if (cloudData.lastObtained) {
+                        const last = cloudData.lastObtained;
+                        const spriteUrl = last.isShiny ? SHINY_SPRITE_BASE_URL + last.id + ".png" : SPRITE_BASE_URL + last.id + ".png";
+                        
+                        document.getElementById('f-last-sprite').src = spriteUrl;
+                        document.getElementById('f-last-name').innerText = (last.isShiny ? "✨ " : "") + last.name;
+                        document.getElementById('f-last-num').innerText = "#" + String(last.id).padStart(4, '0');
+                        
+                        const dateStr = last.timestamp ? new Date(last.timestamp).toLocaleString('pt-BR') : 'Recentemente';
+                        const sourceStr = last.source === 'booster' ? ' (via Booster Pack)' : ' (via Captura)';
+                        document.getElementById('f-last-time').innerText = dateStr + sourceStr;
+                        return;
+                    }
+                }
+            }
+
+            // Fallback para quando o amigo não tiver dados na nuvem registrados
+            document.getElementById('f-last-name').innerText = "Nenhum Pokémon registrado";
+            document.getElementById('f-last-num').innerText = "#0000";
+            document.getElementById('f-last-time').innerText = "Sem dados salvos";
+        }
+
+        function closeFriendModal() {
+            document.getElementById('friend-details-modal').classList.remove('active');
+        }
+
+        function initiateTradeWithFriend() {
+            showToast("O sistema de trocas será implementado em breve!");
+        }
+
         function showToast(msg) {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
@@ -2281,6 +2754,26 @@
                 toast.remove();
             }, 3000);
         }
+
+        // Expor funções necessárias globalmente
+        window.switchProfileTab = switchProfileTab;
+        window.copyMyID = copyMyID;
+        window.addFriendByID = addFriendByID;
+        window.openFriendDetails = openFriendDetails;
+        window.closeFriendModal = closeFriendModal;
+        window.initiateTradeWithFriend = initiateTradeWithFriend;
+        window.openProfileModal = openProfileModal;
+        window.closeProfileModal = closeProfileModal;
+        window.saveTrainerName = saveTrainerName;
+        window.loginEmail = loginEmail;
+        window.registerEmail = registerEmail;
+        window.logoutUser = logoutUser;
+        window.resetGameSave = resetGameSave;
+        window.buyBoosterPack = buyBoosterPack;
+        window.closeBoosterModal = closeBoosterModal;
+        window.attemptCatch = attemptCatch;
+        window.renderPokedex = renderPokedex;
+        window.updateTrainerIDDisplay = updateTrainerIDDisplay;
 
         window.onload = initGame;
     </script>
